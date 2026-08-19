@@ -141,75 +141,190 @@
     </section>
 
     <div class="stack-shell">
-      <section class="stack-panel" id="services" style="--z:10">
-        <div class="panel-inner cream">
-          <div class="panel-grid">
-            <div class="panel-copy cream-copy reveal reveal-left">
-              <div class="scroll-decor parallax" data-speed="0.16">PREISE</div>
-              <h2>Schnitt. Pflege.<br>Styling.</h2>
-              <p>Wähle unten zwischen Damen und Herren. Preise und Leistungen wechseln direkt mit deiner Auswahl.</p>
+      <section class="stack-panel price-panel" id="services" style="--z:10">
+        <div class="panel-inner cream price-panel-inner">
+          <div class="panel-grid price-layout">
+            <div class="panel-copy cream-copy price-intro reveal reveal-left">
+              <div class="scroll-decor parallax" data-speed="0.12">PREISE</div>
+              <p class="price-kicker">Preisliste</p>
+              <h2>Damen &amp;<br>Herren.</h2>
+              <p>Wähle unten zwischen Damen und Herren. Die komplette Preisliste wechselt direkt mit deiner Auswahl.</p>
             </div>
 
-            <div class="service-side gender-panel" data-gender-panel="herren">
-              <article class="service-card animate-on-scroll reveal-pop in-view">
-                <div>
-                  <h3>Herrenhaarschnitt</h3>
-                  <p>Beratung, Schnitt und Styling.</p>
+            <div class="price-side gender-panel" data-gender-panel="herren">
+              <section class="price-category">
+                <div class="price-category-head"><span>01</span><h3>Haare &amp; Styling</h3></div>
+                <div class="price-simple-row"><span>Trockenhaarschnitt + Styling</span><strong>21 €</strong></div>
+                <div class="price-simple-row"><span>Haarschnitt mit Maschine, gleiche Länge</span><strong>10 €</strong></div>
+                <div class="price-simple-row"><span>Waschen</span><strong>2 €</strong></div>
+              </section>
+
+              <section class="price-category">
+                <div class="price-category-head"><span>02</span><h3>Bart</h3></div>
+                <div class="price-simple-row"><span>Haarschnitt mit Bart</span><strong>35 €</strong></div>
+                <div class="price-simple-row"><span>Bartrasur</span><strong>14 €</strong></div>
+              </section>
+
+              <section class="price-category">
+                <div class="price-category-head"><span>03</span><h3>Kosmetik</h3></div>
+                <div class="price-simple-row"><span>Augenbrauen zupfen</span><strong>5 €</strong></div>
+              </section>
+
+              <section class="price-category">
+                <div class="price-category-head"><span>04</span><h3>Kinder</h3></div>
+                <div class="price-simple-row"><span>Bis 10 Jahre</span><strong>12 €</strong></div>
+                <div class="price-simple-row"><span>Ab 10 Jahre</span><strong>21 €</strong></div>
+              </section>
+
+              <section class="price-category price-category-wide price-extras">
+                <div class="price-category-head"><span>+</span><h3>Kostenlose Extras</h3></div>
+                <div class="free-extra-grid">
+                  <span>Ohren + Nase<br>mit Wachs</span>
+                  <span>Haarmaske</span>
+                  <span>Gesichtsmaske</span>
                 </div>
-                <div class="service-price"><span>45 min</span><strong>32 €</strong></div>
-              </article>
-              <article class="service-card animate-on-scroll reveal-pop in-view">
-                <div>
-                  <h3>Fade</h3>
-                  <p>Saubere Übergänge und präzise Konturen.</p>
-                </div>
-                <div class="service-price"><span>50 min</span><strong>36 €</strong></div>
-              </article>
-              <article class="service-card animate-on-scroll reveal-pop in-view">
-                <div>
-                  <h3>Bart</h3>
-                  <p>Konturen, Pflege und Bartstyling.</p>
-                </div>
-                <div class="service-price"><span>30 min</span><strong>24 €</strong></div>
-              </article>
-              <article class="service-card animate-on-scroll reveal-pop in-view">
-                <div>
-                  <h3>Schnitt + Bart</h3>
-                  <p>Das komplette Paket für Haare und Bart.</p>
-                </div>
-                <div class="service-price"><span>70 min</span><strong>52 €</strong></div>
-              </article>
+              </section>
             </div>
 
-            <div class="service-side gender-panel" data-gender-panel="damen" hidden>
-              <article class="service-card animate-on-scroll reveal-pop in-view">
-                <div>
-                  <h3>Waschen · Schneiden · Föhnen</h3>
-                  <p>Beratung, Schnitt und vollständiges Styling.</p>
+            <div class="price-side gender-panel" data-gender-panel="damen" hidden>
+              <section class="price-category price-category-wide length-category">
+                <div class="price-category-head"><span>01</span><h3>Schnitt &amp; Styling</h3></div>
+                <div class="price-length-head" aria-hidden="true">
+                  <span></span><strong>Kurz<small>bis Kinn</small></strong><strong>Mittel<small>bis Schulter</small></strong><strong>Lang<small>ab Schulter</small></strong>
                 </div>
-                <div class="service-price"><span>60 min</span><strong>49 €</strong></div>
-              </article>
-              <article class="service-card animate-on-scroll reveal-pop in-view">
-                <div>
-                  <h3>Trockenschnitt</h3>
-                  <p>Präziser Schnitt ohne Waschen und Föhnen.</p>
+                <div class="price-length-row">
+                  <span class="price-service">Waschen · Schneiden · Föhnen</span>
+                  <span class="price-cell"><small>Kurz</small><strong>ab 45 €</strong></span>
+                  <span class="price-cell"><small>Mittel</small><strong>55 €</strong></span>
+                  <span class="price-cell"><small>Lang</small><strong>65 €</strong></span>
                 </div>
-                <div class="service-price"><span>35 min</span><strong>34 €</strong></div>
-              </article>
-              <article class="service-card animate-on-scroll reveal-pop in-view">
-                <div>
-                  <h3>Ansatzfarbe</h3>
-                  <p>Farbe am Ansatz inklusive Pflege.</p>
+                <div class="price-length-row">
+                  <span class="price-service">Waschen · Schneiden</span>
+                  <span class="price-cell"><small>Kurz</small><strong>ab 35 €</strong></span>
+                  <span class="price-cell"><small>Mittel</small><strong>45 €</strong></span>
+                  <span class="price-cell"><small>Lang</small><strong>55 €</strong></span>
                 </div>
-                <div class="service-price"><span>90 min</span><strong>48 €</strong></div>
-              </article>
-              <article class="service-card animate-on-scroll reveal-pop in-view">
-                <div>
-                  <h3>Farbe · Schnitt · Styling</h3>
-                  <p>Farbe, Schnitt, Pflege und Finish.</p>
+                <div class="price-length-row">
+                  <span class="price-service">Waschen · Föhnen</span>
+                  <span class="price-cell"><small>Kurz</small><strong>ab 28 €</strong></span>
+                  <span class="price-cell"><small>Mittel</small><strong>35 €</strong></span>
+                  <span class="price-cell"><small>Lang</small><strong>45 €</strong></span>
                 </div>
-                <div class="service-price"><span>120 min</span><strong>82 €</strong></div>
-              </article>
+                <div class="price-simple-row price-simple-in-table"><span>Ponyschnitt</span><strong>10 €</strong></div>
+                <div class="price-length-row">
+                  <span class="price-service">Haare glätten</span>
+                  <span class="price-cell"><small>Kurz</small><strong>ab 29 €</strong></span>
+                  <span class="price-cell"><small>Mittel</small><strong>39 €</strong></span>
+                  <span class="price-cell"><small>Lang</small><strong>49 €</strong></span>
+                </div>
+                <div class="price-length-row">
+                  <span class="price-service">Haare locken</span>
+                  <span class="price-cell"><small>Kurz</small><strong>ab 30 €</strong></span>
+                  <span class="price-cell"><small>Mittel</small><strong>40 €</strong></span>
+                  <span class="price-cell"><small>Lang</small><strong>50 €</strong></span>
+                </div>
+              </section>
+
+              <section class="price-category price-category-wide length-category">
+                <div class="price-category-head"><span>02</span><h3>Farbe</h3></div>
+                <div class="price-length-head" aria-hidden="true">
+                  <span></span><strong>Kurz<small>bis Kinn</small></strong><strong>Mittel<small>bis Schulter</small></strong><strong>Lang<small>ab Schulter</small></strong>
+                </div>
+                <div class="price-length-row">
+                  <span class="price-service">Farbe komplett</span>
+                  <span class="price-cell"><small>Kurz</small><strong>ab 60 €</strong></span>
+                  <span class="price-cell"><small>Mittel</small><strong>75 €</strong></span>
+                  <span class="price-cell"><small>Lang</small><strong>85 €</strong></span>
+                </div>
+                <div class="price-length-row">
+                  <span class="price-service">Ansatzfärbung (bis 2 cm)</span>
+                  <span class="price-cell"><small>Kurz</small><strong>ab 50 €</strong></span>
+                  <span class="price-cell price-na"><small>Mittel</small><strong>–</strong></span>
+                  <span class="price-cell price-na"><small>Lang</small><strong>–</strong></span>
+                </div>
+                <div class="price-length-row">
+                  <span class="price-service">Ansatztönung (mehr als 2 cm)</span>
+                  <span class="price-cell"><small>Kurz</small><strong>ab 60 €</strong></span>
+                  <span class="price-cell price-na"><small>Mittel</small><strong>–</strong></span>
+                  <span class="price-cell price-na"><small>Lang</small><strong>–</strong></span>
+                </div>
+                <div class="price-length-row">
+                  <span class="price-service">Tönung</span>
+                  <span class="price-cell"><small>Kurz</small><strong>ab 40 €</strong></span>
+                  <span class="price-cell"><small>Mittel</small><strong>48 €</strong></span>
+                  <span class="price-cell"><small>Lang</small><strong>55 €</strong></span>
+                </div>
+              </section>
+
+              <section class="price-category price-category-wide length-category">
+                <div class="price-category-head"><span>03</span><h3>Blond &amp; Highlights</h3></div>
+                <div class="price-length-head" aria-hidden="true">
+                  <span></span><strong>Kurz<small>bis Kinn</small></strong><strong>Mittel<small>bis Schulter</small></strong><strong>Lang<small>ab Schulter</small></strong>
+                </div>
+                <div class="price-length-row">
+                  <span class="price-service">Balayage</span>
+                  <span class="price-cell"><small>Kurz</small><strong>ab 75 €</strong></span>
+                  <span class="price-cell"><small>Mittel</small><strong>90 €</strong></span>
+                  <span class="price-cell"><small>Lang</small><strong>110 €</strong></span>
+                </div>
+                <div class="price-length-row">
+                  <span class="price-service">Strähnen</span>
+                  <span class="price-cell"><small>Kurz</small><strong>ab 70 €</strong></span>
+                  <span class="price-cell"><small>Mittel</small><strong>80 €</strong></span>
+                  <span class="price-cell"><small>Lang</small><strong>100 €</strong></span>
+                </div>
+              </section>
+
+              <section class="price-category price-category-wide length-category">
+                <div class="price-category-head"><span>04</span><h3>Glättung &amp; Umformung</h3></div>
+                <div class="price-length-head" aria-hidden="true">
+                  <span></span><strong>Kurz<small>bis Kinn</small></strong><strong>Mittel<small>bis Schulter</small></strong><strong>Lang<small>ab Schulter</small></strong>
+                </div>
+                <div class="price-length-row">
+                  <span class="price-service">Keratinglättung</span>
+                  <span class="price-cell"><small>Kurz</small><strong>ab 130 €</strong></span>
+                  <span class="price-cell"><small>Mittel</small><strong>160 €</strong></span>
+                  <span class="price-cell"><small>Lang</small><strong>190 €</strong></span>
+                </div>
+                <div class="price-length-row">
+                  <span class="price-service">Dauerwelle</span>
+                  <span class="price-cell"><small>Kurz</small><strong>ab 60 €</strong></span>
+                  <span class="price-cell"><small>Mittel</small><strong>70 €</strong></span>
+                  <span class="price-cell"><small>Lang</small><strong>80 €</strong></span>
+                </div>
+              </section>
+
+              <section class="price-category">
+                <div class="price-category-head"><span>05</span><h3>Pflege</h3></div>
+                <div class="price-simple-row"><span>Haarmaske</span><strong>ab 10 €</strong></div>
+                <div class="price-simple-row"><span>Intensivkur (Haarmaske + Ampulle)</span><strong>ab 18 €</strong></div>
+              </section>
+
+              <section class="price-category">
+                <div class="price-category-head"><span>06</span><h3>Kosmetik</h3></div>
+                <div class="price-simple-row"><span>Augenbrauen zupfen</span><strong>10 €</strong></div>
+                <div class="price-simple-row"><span>Augenbrauen färben</span><strong>10 €</strong></div>
+                <div class="price-simple-row"><span>Wimpern färben</span><strong>12 €</strong></div>
+              </section>
+
+              <section class="price-category">
+                <div class="price-category-head"><span>07</span><h3>Hochzeit &amp; Specials</h3></div>
+                <div class="price-simple-row"><span>Hochsteckfrisur</span><strong>ab 65 €</strong></div>
+                <div class="price-simple-row"><span>Frisur</span><strong>200 €</strong></div>
+                <div class="price-simple-row"><span>Frisur mit Make-up</span><strong>250 €</strong></div>
+                <div class="price-simple-row"><span>Probestecken</span><strong>ab 70–100 €</strong></div>
+                <div class="price-simple-row"><span>Make-up</span><strong>ab 60 €</strong></div>
+              </section>
+
+              <section class="price-category">
+                <div class="price-category-head"><span>08</span><h3>Kinder</h3></div>
+                <p class="price-category-note">Mädchen bis 12 Jahre</p>
+                <div class="price-simple-row"><span>Waschen · Schneiden · Stylen</span><strong>25 €</strong></div>
+              </section>
+
+              <aside class="price-info price-category-wide">
+                Alle Preise verstehen sich inklusive Beratung, Waschen und hochwertiger Pflegeprodukte.
+              </aside>
             </div>
           </div>
         </div>

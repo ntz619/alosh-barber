@@ -132,7 +132,7 @@ const header = document.querySelector('.site-header');
         el.style.transform = `translate3d(0, ${-move}px, 0)`;
       });
 
-      const stickyPanels = [...document.querySelectorAll('.stack-panel')];
+      const stickyPanels = [...document.querySelectorAll('.stack-panel:not(.price-panel)')];
       const topOffset = parseFloat(getComputedStyle(root).getPropertyValue('--header')) + 12;
       stickyPanels.forEach((panel, index) => {
         const inner = panel.querySelector('.panel-inner');
