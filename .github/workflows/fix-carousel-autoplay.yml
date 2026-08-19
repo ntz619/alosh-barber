@@ -5,6 +5,7 @@ on:
     branches: ["main"]
     paths:
       - ".github/fix_carousel_autoplay.py"
+      - ".github/workflows/fix-carousel-autoplay.yml"
   workflow_dispatch:
 
 permissions:
