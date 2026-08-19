@@ -115,11 +115,12 @@
       footerBrand.classList.add('brand-dual');
       footerBrand.innerHTML = '<span class="brand-name"><span>ALOSH</span><i>×</i><span>VIVO</span></span><span class="brand-sub">Hair · Beauty · Barber</span>';
     }
+
     const footerYear = document.getElementById('year');
     if (footerYear?.parentElement) {
       const parent = footerYear.parentElement;
       parent.classList.add('footer-dual-note');
-      while (parent.firstChild) parent.removeChild(parent.firstChild);
+      parent.textContent = '';
       parent.append('© ');
       const year = document.createElement('span');
       year.id = 'year';
@@ -156,8 +157,9 @@
     const hero = document.querySelector('.hero');
     if (!dock || !hero) return;
     const visible = hero.getBoundingClientRect().bottom <= window.innerHeight * .88;
-    dock.classList.toggle('is-visible', visible);
-    dock.setAttribute('aria-hidden', String(!visible));
+    if (dock.classList.contains('is-visible') !== visible) dock.classList.toggle('is-visible', visible);
+    const hiddenValue = String(!visible);
+    if (dock.getAttribute('aria-hidden') !== hiddenValue) dock.setAttribute('aria-hidden', hiddenValue);
   }
 
   decorateDualBrand();
@@ -165,16 +167,8 @@
   syncDockVisibility();
 
   new MutationObserver(mutations => {
-    if (mutations.some(mutation => mutation.attributeName === 'data-gender')) {
-      syncGenderPresentation();
-    }
+    if (mutations.some(mutation => mutation.attributeName === 'data-gender')) syncGenderPresentation();
   }).observe(document.body, { attributes: true, attributeFilter: ['data-gender'] });
-
-  const dock = document.querySelector('[data-gender-dock]');
-  if (dock) {
-    new MutationObserver(() => requestAnimationFrame(syncDockVisibility))
-      .observe(dock, { attributes: true, attributeFilter: ['class', 'aria-hidden'] });
-  }
 
   let dockRaf = 0;
   const requestDockSync = () => {
@@ -211,29 +205,27 @@
     const startScroll = panelTop - headerOffset;
     const endScroll = panelTop + panelHeight;
 
-    if (window.scrollY < startScroll || window.scrollY > endScroll) return;
+    if (window.scrollY >= startScroll && window.scrollY <= endScroll) {
+      const travel = Math.max(panelHeight - viewportHeight, 0);
+      const progress = travel > 1 ? clamp01((window.scrollY - startScroll) / travel) : 0;
 
-    const travel = Math.max(panelHeight - viewportHeight, 0);
-    const progress = travel > 1
-      ? clamp01((window.scrollY - startScroll) / travel)
-      : 0;
-
-    requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        const targetPanel = services.querySelector(`[data-gender-panel="${nextGender}"]:not([hidden])`);
-        if (!targetPanel) return;
+        requestAnimationFrame(() => {
+          const targetPanel = services.querySelector(`[data-gender-panel="${nextGender}"]:not([hidden])`);
+          if (!targetPanel) return;
 
-        const targetRect = targetPanel.getBoundingClientRect();
-        const targetTop = targetRect.top + window.scrollY - headerOffset;
-        const targetTravel = Math.max(targetRect.height - viewportHeight, 0);
-        const targetScroll = targetTop + progress * targetTravel;
-        const maxScroll = Math.max(document.documentElement.scrollHeight - window.innerHeight, 0);
+          const targetRect = targetPanel.getBoundingClientRect();
+          const targetTop = targetRect.top + window.scrollY - headerOffset;
+          const targetTravel = Math.max(targetRect.height - viewportHeight, 0);
+          const targetScroll = targetTop + progress * targetTravel;
+          const maxScroll = Math.max(document.documentElement.scrollHeight - window.innerHeight, 0);
 
-        window.scrollTo({
-          top: Math.min(Math.max(targetScroll, 0), maxScroll),
-          behavior: 'auto'
+          window.scrollTo({ top: Math.min(Math.max(targetScroll, 0), maxScroll), behavior: 'auto' });
+          requestDockSync();
         });
       });
-    });
+    } else {
+      requestAnimationFrame(requestDockSync);
+    }
   }, true);
 })();
