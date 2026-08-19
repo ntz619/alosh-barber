@@ -980,3 +980,16 @@
   #services [data-gender-panel="damen"] .price-cell small{font-size:13px !important}
   #services [data-gender-panel="damen"] .price-cell strong{font-size:16px !important}
 }
+
+
+/* Inline category SVGs - preserve number footprint */
+#services .price-category-head>span svg{
+  display:block;
+  width:1em;
+  height:1em;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.55;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
