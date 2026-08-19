@@ -27,3 +27,5 @@ jobs:
             git commit -m "Introduce ALOSH VIVO shared salon identity"
             git push
           fi
+
+# trigger
