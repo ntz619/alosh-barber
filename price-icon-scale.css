@@ -1,0 +1,4 @@
+#services .price-category-head > span svg {
+  transform: scale(2.5);
+  transform-origin: center;
+}
