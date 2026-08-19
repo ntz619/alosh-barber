@@ -282,7 +282,7 @@
     .cuts-stage{position:relative;top:auto;height:auto;min-height:0;display:block;padding:0;overflow:visible}
     .cuts-word{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);font-size:clamp(72px,14vw,210px);line-height:.82;letter-spacing:.04em;z-index:0}
     .cuts-carousel{position:relative;z-index:2;width:100%;overflow:hidden}
-    .cuts-track{display:flex;grid-template-columns:none;align-items:stretch;gap:clamp(14px,1.8vw,26px);width:100%;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x proximity;scrollbar-width:none;-ms-overflow-style:none;overscroll-behavior-x:contain;touch-action:pan-x pan-y;padding:24px max(var(--pad),calc((100vw - 1480px)/2)) 34px;cursor:grab;-webkit-overflow-scrolling:touch}
+    .cuts-track{display:flex;grid-template-columns:none;align-items:stretch;gap:clamp(14px,1.8vw,26px);width:100%;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;-ms-overflow-style:none;overscroll-behavior-x:contain;touch-action:pan-x pan-y;padding:24px max(var(--pad),calc((100vw - 1480px)/2)) 34px;cursor:grab;-webkit-overflow-scrolling:touch}
     .cuts-track::-webkit-scrollbar{display:none}
     .cuts-track.is-dragging{cursor:grabbing;scroll-snap-type:none;user-select:none}
     .cut-card,.cut-card:nth-child(n){position:relative;flex:0 0 clamp(290px,31vw,470px);width:auto;height:clamp(390px,57vw,620px);min-height:0;max-height:68svh;border-radius:24px;overflow:hidden;scroll-snap-align:center;transform:none!important;background:#171511}
@@ -793,7 +793,7 @@
     document.querySelectorAll('.reveal, .animate-on-scroll').forEach(el => revealObserver.observe(el));
 
 
-    // cuts-horizontal-carousel-v2
+    // cuts-horizontal-carousel-v3
     function setupCutsCarousel() {
       const track = document.querySelector('[data-cuts-carousel]');
       if (!track) return;
@@ -809,85 +809,168 @@
         track.appendChild(clone);
       });
 
-      let pausedUntil = 0;
+      const originalCount = originals.length;
+      const AUTO_DELAY = 3200;
+      const RESUME_DELAY = 3600;
+      const SCROLL_DURATION = 750;
+
+      let autoTimer = null;
+      let settleTimer = null;
       let isDragging = false;
       let dragStartX = 0;
       let dragStartScrollLeft = 0;
-      let lastFrame = performance.now();
       let loopWidth = 0;
 
+      const cards = () => [...track.children];
+
       const updateLoopWidth = () => {
-        const firstClone = track.children[originals.length];
+        const firstClone = track.children[originalCount];
         loopWidth = firstClone ? firstClone.offsetLeft - track.children[0].offsetLeft : track.scrollWidth / 2;
       };
 
-      const pauseAuto = (milliseconds = 3000) => {
-        pausedUntil = Math.max(pausedUntil, performance.now() + milliseconds);
+      const centeredLeft = card => {
+        const raw = card.offsetLeft - (track.clientWidth - card.offsetWidth) / 2;
+        return Math.max(0, raw);
       };
 
-      const normalizePosition = () => {
+      const normalizeLoopPosition = () => {
         if (!loopWidth) return;
         while (track.scrollLeft >= loopWidth) track.scrollLeft -= loopWidth;
         while (track.scrollLeft < 0) track.scrollLeft += loopWidth;
       };
 
-      const animate = now => {
-        const dt = Math.min(now - lastFrame, 40);
-        lastFrame = now;
-        if (!reducedMotion && !isDragging && now >= pausedUntil && document.visibilityState === 'visible') {
-          track.scrollLeft += dt * 0.032;
-          normalizePosition();
-        }
-        requestAnimationFrame(animate);
+      const nearestCardIndex = () => {
+        const center = track.scrollLeft + track.clientWidth / 2;
+        const list = cards();
+        let nearest = 0;
+        let distance = Infinity;
+        list.forEach((card, index) => {
+          const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+          const d = Math.abs(cardCenter - center);
+          if (d < distance) {
+            distance = d;
+            nearest = index;
+          }
+        });
+        return nearest;
       };
 
-      ['touchstart', 'wheel'].forEach(type => {
-        track.addEventListener(type, () => pauseAuto(type === 'wheel' ? 2200 : 3200), { passive: true });
-      });
-      track.addEventListener('touchend', () => pauseAuto(3200), { passive: true });
-      track.addEventListener('mouseenter', () => pauseAuto(1200));
-      track.addEventListener('focusin', () => pauseAuto(3200));
+      const clearAuto = () => {
+        if (autoTimer) clearTimeout(autoTimer);
+        autoTimer = null;
+      };
+
+      const scheduleAuto = (delay = AUTO_DELAY) => {
+        clearAuto();
+        if (reducedMotion) return;
+        autoTimer = setTimeout(advance, delay);
+      };
+
+      const pauseForInteraction = (delay = RESUME_DELAY) => {
+        clearAuto();
+        if (settleTimer) clearTimeout(settleTimer);
+        settleTimer = setTimeout(() => {
+          normalizeLoopPosition();
+          scheduleAuto(500);
+        }, delay);
+      };
+
+      function advance() {
+        if (isDragging || document.visibilityState !== 'visible') {
+          scheduleAuto(900);
+          return;
+        }
+
+        normalizeLoopPosition();
+        let current = nearestCardIndex();
+        if (current >= originalCount) current -= originalCount;
+
+        // Move to the next original; after the final original we animate to the
+        // identical first clone, then invisibly jump back to the real first card.
+        const targetIndex = current === originalCount - 1 ? originalCount : current + 1;
+        const target = track.children[targetIndex];
+        if (!target) {
+          scheduleAuto();
+          return;
+        }
+
+        track.scrollTo({
+          left: centeredLeft(target),
+          behavior: 'smooth'
+        });
+
+        clearTimeout(settleTimer);
+        settleTimer = setTimeout(() => {
+          if (targetIndex === originalCount) {
+            const first = track.children[0];
+            track.scrollLeft = centeredLeft(first);
+          }
+          scheduleAuto();
+        }, SCROLL_DURATION);
+      }
+
+      // Native swipe/trackpad/manual scrolling always wins. Autoplay resumes from
+      // the visitor's new position instead of resetting to the first image.
+      track.addEventListener('touchstart', () => pauseForInteraction(), { passive: true });
+      track.addEventListener('touchend', () => pauseForInteraction(), { passive: true });
+      track.addEventListener('wheel', () => pauseForInteraction(2800), { passive: true });
+      track.addEventListener('focusin', () => pauseForInteraction(), { passive: true });
+
       track.addEventListener('keydown', event => {
         if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
         event.preventDefault();
-        const amount = Math.min(track.clientWidth * .72, 420);
-        track.scrollBy({ left: event.key === 'ArrowRight' ? amount : -amount, behavior: reducedMotion ? 'auto' : 'smooth' });
-        pauseAuto(3200);
+        pauseForInteraction();
+        const list = cards();
+        let current = nearestCardIndex();
+        if (current >= originalCount) current -= originalCount;
+        const direction = event.key === 'ArrowRight' ? 1 : -1;
+        const targetIndex = (current + direction + originalCount) % originalCount;
+        track.scrollTo({ left: centeredLeft(list[targetIndex]), behavior: reducedMotion ? 'auto' : 'smooth' });
       });
 
       track.addEventListener('pointerdown', event => {
         if (event.pointerType !== 'mouse' || event.button !== 0) return;
+        clearAuto();
+        if (settleTimer) clearTimeout(settleTimer);
         isDragging = true;
         dragStartX = event.clientX;
         dragStartScrollLeft = track.scrollLeft;
         track.classList.add('is-dragging');
         track.setPointerCapture?.(event.pointerId);
-        pauseAuto(3500);
       });
+
       track.addEventListener('pointermove', event => {
         if (!isDragging) return;
         track.scrollLeft = dragStartScrollLeft - (event.clientX - dragStartX);
-        pauseAuto(3500);
       });
+
       const stopDragging = event => {
         if (!isDragging) return;
         isDragging = false;
         track.classList.remove('is-dragging');
-        if (event?.pointerId != null && track.hasPointerCapture?.(event.pointerId)) track.releasePointerCapture(event.pointerId);
-        normalizePosition();
-        pauseAuto(3200);
+        if (event?.pointerId != null && track.hasPointerCapture?.(event.pointerId)) {
+          track.releasePointerCapture(event.pointerId);
+        }
+        pauseForInteraction();
       };
+
       track.addEventListener('pointerup', stopDragging);
       track.addEventListener('pointercancel', stopDragging);
       track.addEventListener('lostpointercapture', stopDragging);
 
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') scheduleAuto(900);
+        else clearAuto();
+      });
+
       window.addEventListener('resize', () => {
         updateLoopWidth();
-        normalizePosition();
+        normalizeLoopPosition();
       });
+
       requestAnimationFrame(() => {
         updateLoopWidth();
-        requestAnimationFrame(animate);
+        scheduleAuto(1200);
       });
     }
 
