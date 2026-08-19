@@ -177,8 +177,7 @@ const header = document.querySelector('.site-header');
 
     document.querySelectorAll('.reveal, .animate-on-scroll').forEach(el => revealObserver.observe(el));
 
-
-    // cuts-horizontal-carousel-v3
+    // cuts-horizontal-carousel-v4
     function setupCutsCarousel() {
       const track = document.querySelector('[data-cuts-carousel]');
       if (!track) return;
@@ -186,42 +185,53 @@ const header = document.querySelector('.site-header');
       const originals = [...track.children];
       if (!originals.length) return;
 
-      originals.forEach(card => {
+      const createClone = card => {
         const clone = card.cloneNode(true);
         clone.setAttribute('aria-hidden', 'true');
         clone.classList.add('in-view');
         clone.querySelectorAll('img').forEach(img => img.removeAttribute('loading'));
-        track.appendChild(clone);
-      });
+        return clone;
+      };
+
+      // Keep a complete duplicate on both sides of the real cards. The user can
+      // therefore move through the seam in either direction without ever seeing
+      // the carousel run out of content.
+      const leftCopies = document.createDocumentFragment();
+      originals.forEach(card => leftCopies.appendChild(createClone(card)));
+      track.prepend(leftCopies);
+
+      const rightCopies = document.createDocumentFragment();
+      originals.forEach(card => rightCopies.appendChild(createClone(card)));
+      track.append(rightCopies);
 
       const originalCount = originals.length;
+      const originalStart = originalCount;
+      const originalEnd = originalStart + originalCount - 1;
       const AUTO_DELAY = 3200;
       const RESUME_DELAY = 3600;
-      const SCROLL_DURATION = 750;
+      const SCROLL_DURATION = 800;
+      const MANUAL_SETTLE_DELAY = 180;
 
       let autoTimer = null;
       let settleTimer = null;
+      let manualSettleTimer = null;
       let isDragging = false;
+      let autoAnimating = false;
+      let loopJumping = false;
       let dragStartX = 0;
       let dragStartScrollLeft = 0;
-      let loopWidth = 0;
+      let setWidth = 0;
 
       const cards = () => [...track.children];
 
-      const updateLoopWidth = () => {
-        const firstClone = track.children[originalCount];
-        loopWidth = firstClone ? firstClone.offsetLeft - track.children[0].offsetLeft : track.scrollWidth / 2;
-      };
+      const centeredLeft = card => card.offsetLeft - (track.clientWidth - card.offsetWidth) / 2;
 
-      const centeredLeft = card => {
-        const raw = card.offsetLeft - (track.clientWidth - card.offsetWidth) / 2;
-        return Math.max(0, raw);
-      };
-
-      const normalizeLoopPosition = () => {
-        if (!loopWidth) return;
-        while (track.scrollLeft >= loopWidth) track.scrollLeft -= loopWidth;
-        while (track.scrollLeft < 0) track.scrollLeft += loopWidth;
+      const updateSetWidth = () => {
+        const leftFirst = track.children[0];
+        const middleFirst = track.children[originalStart];
+        setWidth = leftFirst && middleFirst
+          ? middleFirst.offsetLeft - leftFirst.offsetLeft
+          : track.scrollWidth / 3;
       };
 
       const nearestCardIndex = () => {
@@ -229,20 +239,58 @@ const header = document.querySelector('.site-header');
         const list = cards();
         let nearest = 0;
         let distance = Infinity;
+
         list.forEach((card, index) => {
           const cardCenter = card.offsetLeft + card.offsetWidth / 2;
-          const d = Math.abs(cardCenter - center);
-          if (d < distance) {
-            distance = d;
+          const currentDistance = Math.abs(cardCenter - center);
+          if (currentDistance < distance) {
+            distance = currentDistance;
             nearest = index;
           }
         });
+
         return nearest;
+      };
+
+      const jumpBySet = delta => {
+        if (!delta || !setWidth) return;
+        loopJumping = true;
+        track.classList.add('is-loop-jump');
+        track.scrollLeft += delta;
+        requestAnimationFrame(() => {
+          track.classList.remove('is-loop-jump');
+          loopJumping = false;
+        });
+      };
+
+      // Move a side duplicate back to the identical card in the middle set. The
+      // visual content and its exact viewport position do not change, so the loop
+      // is continuous even though the underlying scroll coordinate is recycled.
+      const normalizeToMiddle = () => {
+        if (!setWidth) return nearestCardIndex();
+        const index = nearestCardIndex();
+
+        if (index < originalStart) {
+          jumpBySet(setWidth);
+          return index + originalCount;
+        }
+
+        if (index > originalEnd) {
+          jumpBySet(-setWidth);
+          return index - originalCount;
+        }
+
+        return index;
       };
 
       const clearAuto = () => {
         if (autoTimer) clearTimeout(autoTimer);
         autoTimer = null;
+      };
+
+      const clearSettle = () => {
+        if (settleTimer) clearTimeout(settleTimer);
+        settleTimer = null;
       };
 
       const scheduleAuto = (delay = AUTO_DELAY) => {
@@ -251,13 +299,19 @@ const header = document.querySelector('.site-header');
         autoTimer = setTimeout(advance, delay);
       };
 
-      const pauseForInteraction = (delay = RESUME_DELAY) => {
+      const beginManualInteraction = () => {
+        autoAnimating = false;
         clearAuto();
-        if (settleTimer) clearTimeout(settleTimer);
-        settleTimer = setTimeout(() => {
-          normalizeLoopPosition();
-          scheduleAuto(500);
-        }, delay);
+        clearSettle();
+      };
+
+      const scheduleResumeAfterManualScroll = () => {
+        if (manualSettleTimer) clearTimeout(manualSettleTimer);
+        manualSettleTimer = setTimeout(() => {
+          updateSetWidth();
+          normalizeToMiddle();
+          scheduleAuto(RESUME_DELAY);
+        }, MANUAL_SETTLE_DELAY);
       };
 
       function advance() {
@@ -266,57 +320,58 @@ const header = document.querySelector('.site-header');
           return;
         }
 
-        normalizeLoopPosition();
-        let current = nearestCardIndex();
-        if (current >= originalCount) current -= originalCount;
+        updateSetWidth();
+        const current = normalizeToMiddle();
+        const target = track.children[current + 1];
 
-        // Move to the next original; after the final original we animate to the
-        // identical first clone, then invisibly jump back to the real first card.
-        const targetIndex = current === originalCount - 1 ? originalCount : current + 1;
-        const target = track.children[targetIndex];
         if (!target) {
           scheduleAuto();
           return;
         }
 
-        track.scrollTo({
-          left: centeredLeft(target),
-          behavior: 'smooth'
-        });
+        autoAnimating = true;
+        track.scrollTo({ left: centeredLeft(target), behavior: 'smooth' });
 
-        clearTimeout(settleTimer);
+        clearSettle();
         settleTimer = setTimeout(() => {
-          if (targetIndex === originalCount) {
-            const first = track.children[0];
-            track.scrollLeft = centeredLeft(first);
-          }
+          autoAnimating = false;
+          normalizeToMiddle();
           scheduleAuto();
         }, SCROLL_DURATION);
       }
 
-      // Native swipe/trackpad/manual scrolling always wins. Autoplay resumes from
-      // the visitor's new position instead of resetting to the first image.
-      track.addEventListener('touchstart', () => pauseForInteraction(), { passive: true });
-      track.addEventListener('touchend', () => pauseForInteraction(), { passive: true });
-      track.addEventListener('wheel', () => pauseForInteraction(2800), { passive: true });
-      track.addEventListener('focusin', () => pauseForInteraction(), { passive: true });
+      // Any native swipe, touchpad or mouse-wheel movement pauses autoplay. Once
+      // the user stops, autoplay resumes from that exact logical card/position.
+      track.addEventListener('scroll', () => {
+        if (autoAnimating || loopJumping || isDragging) return;
+        clearAuto();
+        scheduleResumeAfterManualScroll();
+      }, { passive: true });
+
+      track.addEventListener('touchstart', beginManualInteraction, { passive: true });
+      track.addEventListener('wheel', beginManualInteraction, { passive: true });
+      track.addEventListener('focusin', beginManualInteraction, { passive: true });
 
       track.addEventListener('keydown', event => {
         if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
         event.preventDefault();
-        pauseForInteraction();
-        const list = cards();
-        let current = nearestCardIndex();
-        if (current >= originalCount) current -= originalCount;
+        beginManualInteraction();
+        updateSetWidth();
+        const current = normalizeToMiddle();
         const direction = event.key === 'ArrowRight' ? 1 : -1;
-        const targetIndex = (current + direction + originalCount) % originalCount;
-        track.scrollTo({ left: centeredLeft(list[targetIndex]), behavior: reducedMotion ? 'auto' : 'smooth' });
+        const target = track.children[current + direction];
+        if (target) {
+          track.scrollTo({
+            left: centeredLeft(target),
+            behavior: reducedMotion ? 'auto' : 'smooth'
+          });
+        }
+        scheduleResumeAfterManualScroll();
       });
 
       track.addEventListener('pointerdown', event => {
         if (event.pointerType !== 'mouse' || event.button !== 0) return;
-        clearAuto();
-        if (settleTimer) clearTimeout(settleTimer);
+        beginManualInteraction();
         isDragging = true;
         dragStartX = event.clientX;
         dragStartScrollLeft = track.scrollLeft;
@@ -336,7 +391,7 @@ const header = document.querySelector('.site-header');
         if (event?.pointerId != null && track.hasPointerCapture?.(event.pointerId)) {
           track.releasePointerCapture(event.pointerId);
         }
-        pauseForInteraction();
+        scheduleResumeAfterManualScroll();
       };
 
       track.addEventListener('pointerup', stopDragging);
@@ -345,17 +400,31 @@ const header = document.querySelector('.site-header');
 
       document.addEventListener('visibilitychange', () => {
         if (document.visibilityState === 'visible') scheduleAuto(900);
-        else clearAuto();
+        else {
+          beginManualInteraction();
+          if (manualSettleTimer) clearTimeout(manualSettleTimer);
+        }
       });
 
       window.addEventListener('resize', () => {
-        updateLoopWidth();
-        normalizeLoopPosition();
+        beginManualInteraction();
+        requestAnimationFrame(() => {
+          updateSetWidth();
+          normalizeToMiddle();
+          scheduleAuto(900);
+        });
       });
 
       requestAnimationFrame(() => {
-        updateLoopWidth();
-        scheduleAuto(1200);
+        updateSetWidth();
+        loopJumping = true;
+        track.classList.add('is-loop-jump');
+        track.scrollLeft = centeredLeft(track.children[originalStart]);
+        requestAnimationFrame(() => {
+          track.classList.remove('is-loop-jump');
+          loopJumping = false;
+          scheduleAuto(1200);
+        });
       });
     }
 

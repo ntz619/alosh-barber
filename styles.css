@@ -270,9 +270,10 @@
     .cuts-stage{position:relative;top:auto;height:auto;min-height:0;display:block;padding:0;overflow:visible}
     .cuts-word{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);font-size:clamp(72px,14vw,210px);line-height:.82;letter-spacing:.04em;z-index:0}
     .cuts-carousel{position:relative;z-index:2;width:100%;overflow:hidden}
-    .cuts-track{display:flex;grid-template-columns:none;align-items:stretch;gap:clamp(14px,1.8vw,26px);width:100%;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;-ms-overflow-style:none;overscroll-behavior-x:contain;touch-action:pan-x pan-y;padding:24px max(var(--pad),calc((100vw - 1480px)/2)) 34px;cursor:grab;-webkit-overflow-scrolling:touch}
+    .cuts-track{display:flex;grid-template-columns:none;align-items:stretch;gap:clamp(14px,1.8vw,26px);width:100%;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x proximity;scrollbar-width:none;-ms-overflow-style:none;overscroll-behavior-x:contain;touch-action:pan-x pan-y;padding:24px max(var(--pad),calc((100vw - 1480px)/2)) 34px;cursor:grab;-webkit-overflow-scrolling:touch}
     .cuts-track::-webkit-scrollbar{display:none}
     .cuts-track.is-dragging{cursor:grabbing;scroll-snap-type:none;user-select:none}
+    .cuts-track.is-loop-jump{scroll-snap-type:none}
     .cut-card,.cut-card:nth-child(n){position:relative;flex:0 0 clamp(290px,31vw,470px);width:auto;height:clamp(390px,57vw,620px);min-height:0;max-height:68svh;border-radius:24px;overflow:hidden;scroll-snap-align:center;transform:none!important;background:#171511}
     .cut-card img{width:100%;height:100%;object-fit:cover;object-position:center}
     .cut-card figcaption{left:20px;right:20px;bottom:18px;font-size:clamp(30px,3.2vw,48px);line-height:1;overflow-wrap:anywhere}
