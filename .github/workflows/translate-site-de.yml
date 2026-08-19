@@ -27,3 +27,5 @@ jobs:
             git commit -m "Translate website fully to German"
             git push
           fi
+
+# trigger
