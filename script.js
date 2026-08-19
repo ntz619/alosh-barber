@@ -454,6 +454,7 @@ function initGenderExperience() {
   const panels = [...document.querySelectorAll('[data-gender-panel]')];
   const tracks = [...document.querySelectorAll('[data-cuts-carousel]')];
   const genderWord = document.querySelector('[data-gender-word]');
+  const priceTitle = document.querySelector('[data-gender-price-title]');
   const cuts = document.getElementById('cuts');
   const salon = document.getElementById('salon');
   if (!dock || !buttons.length || !cuts || !salon) return;
@@ -464,6 +465,7 @@ function initGenderExperience() {
     selectedGender = gender;
     document.body.dataset.gender = gender;
     if (genderWord) genderWord.textContent = gender === 'damen' ? 'DAMEN' : 'HERREN';
+    if (priceTitle) priceTitle.textContent = gender === 'damen' ? 'Damen.' : 'Herren.';
 
     buttons.forEach(button => {
       const activeButton = button.dataset.genderToggle === gender;
