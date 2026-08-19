@@ -1,236 +1,163 @@
 from pathlib import Path
+import re
 
 path = Path("index.html")
 s = path.read_text(encoding="utf-8")
 
-# Make the decorative labels safer on narrow screens.
-for old, new in {
-    "ALOSH · ALOSH · ALOSH": "ALOSH",
-    "BARBER · STYLE · CARE": "BARBER",
-    "CRAFT · CRAFT · CRAFT": "CRAFT",
-    "SALON · SALON · SALON": "SALON",
-    "TRUST · TRUST · TRUST": "TRUST",
-}.items():
-    s = s.replace(old, new)
+# Keep every visible location reference in Rostock.
+s = s.replace("Lüneburg", "Rostock").replace("L%C3%BCneburg", "Rostock").replace("Luneburg", "Rostock").replace("luneburg", "rostock")
 
-# Replace the example-cuts block with a true horizontal carousel.
-start = s.index('    <section class="cuts-showcase" id="cuts"')
-end = s.index('    <div class="stack-shell">', start)
-new_cuts = '''    <section class="cuts-showcase" id="cuts" aria-label="Example haircuts">
-      <div class="cuts-stage">
-        <div class="cuts-word parallax" data-speed="0.045" aria-hidden="true">CUTS</div>
-        <div class="cuts-carousel">
-          <div class="cuts-track" data-cuts-carousel tabindex="0" aria-label="Haircut examples. Swipe or drag sideways.">
-            <figure class="cut-card animate-on-scroll" style="--delay:.02s">
-              <img loading="lazy" src="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?auto=format&fit=crop&w=1000&q=88" alt="Example modern fade haircut" />
-              <figcaption>Clean Fade</figcaption>
-            </figure>
-            <figure class="cut-card animate-on-scroll" style="--delay:.1s">
-              <img loading="lazy" src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=1000&q=88" alt="Example textured men's haircut" />
-              <figcaption>Texture</figcaption>
-            </figure>
-            <figure class="cut-card animate-on-scroll" style="--delay:.18s">
-              <img loading="lazy" src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?auto=format&fit=crop&w=1000&q=88" alt="Example classic men's barber haircut" />
-              <figcaption>Classic</figcaption>
-            </figure>
-            <figure class="cut-card animate-on-scroll" style="--delay:.26s">
-              <img loading="lazy" src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&w=1000&q=88" alt="Example beard and haircut combination" />
-              <figcaption>Cut + Beard</figcaption>
-            </figure>
-          </div>
-        </div>
-      </div>
-    </section>
+# The Maps button should open the exact Google Maps place, not just the address search.
+maps_url = "https://www.google.com/maps/search/?api=1&query=Kurdistan+Barbershop+-+Friseur+Atelier+Justyna%2C+Rostock&query_place_id=ChIJq4bq9xNXrEcRFlgokdhbPqw"
+s = re.sub(
+    r'href="https://www\.google\.com/maps/search/\?api=1&query=[^"]+" target="_blank" rel="noopener">Open in Maps</a>',
+    f'href="{maps_url}" target="_blank" rel="noopener">Open in Maps</a>',
+    s,
+)
 
-'''
-s = s[:start] + new_cuts + s[end:]
+# Show the actual shop name in the location block.
+s = s.replace(
+    '<strong>ALOSH</strong><br>\n            Doberaner Str. 48<br>\n            18057 Rostock',
+    '<strong>Kurdistan Barbershop</strong><br>\n            Doberaner Str. 48<br>\n            18057 Rostock',
+)
 
-# Add final CSS overrides instead of relying on fragile earlier selectors.
-css_marker = "/* mobile-carousel-safety-v2 */"
-if css_marker not in s:
-    css = r'''
+# Make the top status dynamic instead of hard-coded.
+s = s.replace(
+    '<div class="hero-card-line"><span>Mon–Fri</span><strong>08:30–19</strong></div>',
+    '<div class="hero-card-line"><span data-shop-status>Opening hours</span><strong data-shop-detail>Mon–Fri 08:30–19:00</strong></div>',
+)
+s = s.replace(
+    '''      <div class="info-box reveal reveal-pop" style="--delay:.02s">\n        <strong>Mon–Fri</strong>\n        <span>08:30 – 19:00</span>\n      </div>''',
+    '''      <div class="info-box reveal reveal-pop" style="--delay:.02s">\n        <strong data-shop-status>Opening hours</strong>\n        <span data-shop-detail>Mon–Fri 08:30 – 19:00</span>\n      </div>''',
+)
 
-    /* mobile-carousel-safety-v2 */
-    .hero-decor.one{left:var(--pad);right:auto}
-    .hero-decor.two{right:var(--pad)}
-    .panel-copy .scroll-decor{left:4%;bottom:-4%;font-size:clamp(64px,9vw,128px);pointer-events:none}
-    .gallery-copy .scroll-decor{left:auto;right:4%;top:8%;bottom:auto}
+# When measuring anchor positions, temporarily disable sticky positioning so the
+# destination is based on the section's natural document position even if the
+# visitor is already far down the page.
+measurement_css = '''    .scroll-measure .stack-panel{position:relative !important;top:auto !important}\n    .scroll-measure .panel-inner{transform:none !important;filter:none !important}\n\n'''
+css_anchor = '    /* Content safety: meaningful text and controls must always fit the viewport. */\n'
+if measurement_css.strip() not in s and css_anchor in s:
+    s = s.replace(css_anchor, measurement_css + css_anchor, 1)
 
-    .hero-inner>*,.panel-grid>*,.visit-card>*,.service-card,.review-side,.gallery-side,.hero-card,.info-box{min-width:0;max-width:100%}
-    h1,h2,h3,blockquote,.hero-card-line strong,.hero-card-line span,.button,.address-box,.hour-box,.info-box{overflow-wrap:anywhere;word-break:normal}
-    iframe{max-width:100%}
+navigation = r'''    function getNaturalAnchorMetrics(target) {
+      root.classList.add('scroll-measure');
+      void document.body.offsetHeight;
 
-    .cuts-showcase{height:auto;position:relative;background:linear-gradient(180deg,var(--bg) 0%,#0d0c0a 100%);overflow:hidden;padding:clamp(54px,7vw,96px) 0}
-    .cuts-stage{position:relative;top:auto;height:auto;min-height:0;display:block;padding:0;overflow:visible}
-    .cuts-word{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);font-size:clamp(72px,14vw,210px);line-height:.82;letter-spacing:.04em;z-index:0}
-    .cuts-carousel{position:relative;z-index:2;width:100%;overflow:hidden}
-    .cuts-track{display:flex;grid-template-columns:none;align-items:stretch;gap:clamp(14px,1.8vw,26px);width:100%;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x proximity;scrollbar-width:none;-ms-overflow-style:none;overscroll-behavior-x:contain;touch-action:pan-x pan-y;padding:24px max(var(--pad),calc((100vw - 1480px)/2)) 34px;cursor:grab;-webkit-overflow-scrolling:touch}
-    .cuts-track::-webkit-scrollbar{display:none}
-    .cuts-track.is-dragging{cursor:grabbing;scroll-snap-type:none;user-select:none}
-    .cut-card,.cut-card:nth-child(n){position:relative;flex:0 0 clamp(290px,31vw,470px);width:auto;height:clamp(390px,57vw,620px);min-height:0;max-height:68svh;border-radius:24px;overflow:hidden;scroll-snap-align:center;transform:none!important;background:#171511}
-    .cut-card img{width:100%;height:100%;object-fit:cover;object-position:center}
-    .cut-card figcaption{left:20px;right:20px;bottom:18px;font-size:clamp(30px,3.2vw,48px);line-height:1;overflow-wrap:anywhere}
+      let focus = target;
+      if (target.classList.contains('stack-panel')) focus = target.querySelector('.panel-inner') || target;
+      if (target.id === 'visit') focus = target.querySelector('.visit-card') || target;
 
-    @media (max-width:780px){
-      body{overflow-x:hidden}
-      .hero{min-height:0;padding-top:calc(var(--header) + 24px);padding-bottom:28px}
-      .hero-inner{width:100%;min-width:0}
-      .hero-copy,.hero-card{width:100%;min-width:0}
-      .hero-copy h1{font-size:clamp(54px,18vw,72px);line-height:.88}
-      .hero-copy p,.panel-copy p,.visit-content p{font-size:clamp(19px,5.4vw,22px)}
-      .hero-card-line{display:grid;grid-template-columns:1fr;gap:6px;align-items:start}
-      .hero-card-line strong{font-size:clamp(26px,8vw,30px);text-align:left;max-width:100%}
-      .button{white-space:normal;text-align:center;line-height:1.2;padding:13px 18px}
-      .hero-decor{font-size:clamp(54px,19vw,76px)}
-      .hero-decor.one{left:18px}
-      .hero-decor.two{right:18px}
-      .info-box{min-width:0}
+      const rect = focus.getBoundingClientRect();
+      const metrics = { top: rect.top + window.scrollY, height: rect.height };
 
-      .cuts-showcase{padding:44px 0 50px}
-      .cuts-word{font-size:clamp(72px,24vw,112px);top:40%}
-      .cuts-track{gap:14px;padding:18px 18px 26px;scroll-padding-inline:18px}
-      .cut-card,.cut-card:nth-child(n){flex-basis:min(82vw,340px);height:min(64svh,500px);min-height:360px;max-height:none;border-radius:20px}
-      .cut-card figcaption{left:16px;right:16px;bottom:14px;font-size:clamp(30px,9vw,40px)}
-
-      .stack-panel{height:auto;min-height:0}
-      .panel-inner{height:auto;min-height:0;overflow:hidden}
-      .panel-grid{height:auto;min-height:0}
-      .panel-copy{overflow:hidden}
-      .panel-copy h2,.visit-content h2{font-size:clamp(42px,14vw,58px);line-height:.94}
-      .service-card h3{font-size:clamp(30px,10vw,38px)}
-      .service-card p{font-size:19px}
-      .service-price{font-size:17px;flex-wrap:wrap}
-      .gallery-card figcaption{max-width:calc(100% - 24px);white-space:normal;overflow-wrap:anywhere}
-      .review-card blockquote{font-size:clamp(30px,9vw,38px);line-height:1.08}
-      .review-card footer{font-size:17px;overflow-wrap:anywhere}
-      .hours-grid{grid-template-columns:1fr}
-      .address-box{font-size:18px}
-      .visit-actions{display:grid;grid-template-columns:1fr}
-      .visit-map iframe{min-height:330px}
-      .footer nav{width:100%}
+      root.classList.remove('scroll-measure');
+      void document.body.offsetHeight;
+      return metrics;
     }
 
-    @media (max-width:390px){
-      :root{--pad:16px;--section-space:12px}
-      .site-header{padding-inline:16px}
-      .brand-name{font-size:25px}
-      .brand-sub{font-size:9px;letter-spacing:.18em}
-      .hero-copy h1{font-size:clamp(50px,17vw,64px)}
-      .hero-copy p,.panel-copy p,.visit-content p{font-size:19px}
-      .info-box strong{font-size:31px}
-      .review-card blockquote{font-size:30px}
-      .rating-big{font-size:90px}
-      .cut-card,.cut-card:nth-child(n){flex-basis:calc(100vw - 48px);min-height:330px;height:56svh}
-      .footer{padding-inline:16px}
+    function scrollTargetToCenter(target, updateHash = true) {
+      if (!target) return;
+      if (target.id === 'top') {
+        window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' });
+        if (updateHash) history.replaceState(null, '', '#top');
+        return;
+      }
+
+      const { top, height } = getNaturalAnchorMetrics(target);
+      const headerHeight = header?.offsetHeight || 0;
+      const safeTop = headerHeight + 12;
+      const safeBottom = 18;
+      const availableHeight = Math.max(window.innerHeight - safeTop - safeBottom, 1);
+      const visibleHeight = Math.min(height, availableHeight);
+      const centeredTop = top - safeTop - Math.max((availableHeight - visibleHeight) / 2, 0);
+      const maxScroll = Math.max(document.documentElement.scrollHeight - window.innerHeight, 0);
+      const destination = clamp(centeredTop, 0, maxScroll);
+
+      window.scrollTo({ top: destination, behavior: reducedMotion ? 'auto' : 'smooth' });
+      if (updateHash && target.id) history.replaceState(null, '', `#${target.id}`);
     }
-'''
-    s = s.replace("  </style>", css + "\n  </style>", 1)
 
-js_marker = "// cuts-horizontal-carousel-v2"
-if js_marker not in s:
-    insert_before = "    function createCarousel({ trackSelector, itemSelector, prevSelector, nextSelector, progressSelector, mode = 'offset', autoplay = 0 }) {"
-    js = r'''
-    // cuts-horizontal-carousel-v2
-    function setupCutsCarousel() {
-      const track = document.querySelector('[data-cuts-carousel]');
-      if (!track) return;
-
-      const originals = [...track.children];
-      if (!originals.length) return;
-
-      originals.forEach(card => {
-        const clone = card.cloneNode(true);
-        clone.setAttribute('aria-hidden', 'true');
-        clone.classList.add('in-view');
-        clone.querySelectorAll('img').forEach(img => img.removeAttribute('loading'));
-        track.appendChild(clone);
-      });
-
-      let pausedUntil = 0;
-      let isDragging = false;
-      let dragStartX = 0;
-      let dragStartScrollLeft = 0;
-      let lastFrame = performance.now();
-      let loopWidth = 0;
-
-      const updateLoopWidth = () => {
-        const firstClone = track.children[originals.length];
-        loopWidth = firstClone ? firstClone.offsetLeft - track.children[0].offsetLeft : track.scrollWidth / 2;
-      };
-
-      const pauseAuto = (milliseconds = 3000) => {
-        pausedUntil = Math.max(pausedUntil, performance.now() + milliseconds);
-      };
-
-      const normalizePosition = () => {
-        if (!loopWidth) return;
-        while (track.scrollLeft >= loopWidth) track.scrollLeft -= loopWidth;
-        while (track.scrollLeft < 0) track.scrollLeft += loopWidth;
-      };
-
-      const animate = now => {
-        const dt = Math.min(now - lastFrame, 40);
-        lastFrame = now;
-        if (!reducedMotion && !isDragging && now >= pausedUntil && document.visibilityState === 'visible') {
-          track.scrollLeft += dt * 0.032;
-          normalizePosition();
-        }
-        requestAnimationFrame(animate);
-      };
-
-      ['touchstart', 'wheel'].forEach(type => {
-        track.addEventListener(type, () => pauseAuto(type === 'wheel' ? 2200 : 3200), { passive: true });
-      });
-      track.addEventListener('touchend', () => pauseAuto(3200), { passive: true });
-      track.addEventListener('mouseenter', () => pauseAuto(1200));
-      track.addEventListener('focusin', () => pauseAuto(3200));
-      track.addEventListener('keydown', event => {
-        if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+      link.addEventListener('click', event => {
+        const hash = link.getAttribute('href');
+        if (!hash || hash === '#') return;
+        const target = document.querySelector(hash);
+        if (!target) return;
         event.preventDefault();
-        const amount = Math.min(track.clientWidth * .72, 420);
-        track.scrollBy({ left: event.key === 'ArrowRight' ? amount : -amount, behavior: reducedMotion ? 'auto' : 'smooth' });
-        pauseAuto(3200);
-      });
 
-      track.addEventListener('pointerdown', event => {
-        if (event.pointerType !== 'mouse' || event.button !== 0) return;
-        isDragging = true;
-        dragStartX = event.clientX;
-        dragStartScrollLeft = track.scrollLeft;
-        track.classList.add('is-dragging');
-        track.setPointerCapture?.(event.pointerId);
-        pauseAuto(3500);
+        document.body.classList.remove('menu-open');
+        menuToggle?.setAttribute('aria-expanded', 'false');
+        mobileMenu?.setAttribute('aria-hidden', 'true');
+
+        // Call directly instead of deferring through requestAnimationFrame. This
+        // makes repeated quick-link use reliable even during/after long scrolling.
+        scrollTargetToCenter(target);
       });
-      track.addEventListener('pointermove', event => {
-        if (!isDragging) return;
-        track.scrollLeft = dragStartScrollLeft - (event.clientX - dragStartX);
-        pauseAuto(3500);
-      });
-      const stopDragging = event => {
-        if (!isDragging) return;
-        isDragging = false;
-        track.classList.remove('is-dragging');
-        if (event?.pointerId != null && track.hasPointerCapture?.(event.pointerId)) track.releasePointerCapture(event.pointerId);
-        normalizePosition();
-        pauseAuto(3200);
+    });
+
+    window.addEventListener('load', () => {
+      if (!window.location.hash) return;
+      const target = document.querySelector(window.location.hash);
+      if (target) setTimeout(() => scrollTargetToCenter(target, false), 0);
+    }, { once: true });
+
+    function updateShopStatus() {
+      // Verified Rostock hours: Mon–Fri 08:30–19:00, Sat 08:30–16:00, Sun closed.
+      // Europe/Berlin handles German daylight-saving time automatically.
+      const schedule = {
+        0: null,
+        1: [8 * 60 + 30, 19 * 60],
+        2: [8 * 60 + 30, 19 * 60],
+        3: [8 * 60 + 30, 19 * 60],
+        4: [8 * 60 + 30, 19 * 60],
+        5: [8 * 60 + 30, 19 * 60],
+        6: [8 * 60 + 30, 16 * 60]
       };
-      track.addEventListener('pointerup', stopDragging);
-      track.addEventListener('pointercancel', stopDragging);
-      track.addEventListener('lostpointercapture', stopDragging);
+      const weekdayMap = { Sun:0, Mon:1, Tue:2, Wed:3, Thu:4, Fri:5, Sat:6 };
+      const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+      const parts = new Intl.DateTimeFormat('en-GB', {
+        timeZone: 'Europe/Berlin', weekday: 'short', hour: '2-digit', minute: '2-digit', hourCycle: 'h23'
+      }).formatToParts(new Date());
+      const values = Object.fromEntries(parts.map(part => [part.type, part.value]));
+      const day = weekdayMap[values.weekday];
+      const nowMinutes = Number(values.hour) * 60 + Number(values.minute);
+      const hours = schedule[day];
+      const formatTime = minutes => `${String(Math.floor(minutes / 60)).padStart(2,'0')}:${String(minutes % 60).padStart(2,'0')}`;
 
-      window.addEventListener('resize', () => {
-        updateLoopWidth();
-        normalizePosition();
-      });
-      requestAnimationFrame(() => {
-        updateLoopWidth();
-        requestAnimationFrame(animate);
-      });
+      let status = 'Closed now';
+      let detail = '';
+
+      if (hours && nowMinutes >= hours[0] && nowMinutes < hours[1]) {
+        status = 'Open now';
+        detail = `Until ${formatTime(hours[1])}`;
+      } else if (hours && nowMinutes < hours[0]) {
+        status = 'Opens today';
+        detail = formatTime(hours[0]);
+      } else {
+        for (let offset = 1; offset <= 7; offset++) {
+          const nextDay = (day + offset) % 7;
+          const nextHours = schedule[nextDay];
+          if (!nextHours) continue;
+          status = day === 0 ? 'Closed today' : 'Closed now';
+          detail = `Opens ${offset === 1 ? 'tomorrow' : dayNames[nextDay]} ${formatTime(nextHours[0])}`;
+          break;
+        }
+      }
+
+      document.querySelectorAll('[data-shop-status]').forEach(el => { el.textContent = status; });
+      document.querySelectorAll('[data-shop-detail]').forEach(el => { el.textContent = detail; });
     }
 
-    setupCutsCarousel();
+    updateShopStatus();
+    setInterval(updateShopStatus, 60000);
 
 '''
-    s = s.replace(insert_before, js + insert_before, 1)
+
+# Replace the previous anchor-navigation implementation completely so old sticky
+# geometry cannot interfere with later quick-link clicks.
+pattern = r'''    function (?:getDocumentTop|getNaturalAnchorMetrics)\(.*?\n(?=    function handleScrollState\(\)\{)'''
+s, count = re.subn(pattern, navigation, s, flags=re.S)
+if count != 1:
+    raise SystemExit(f"Could not replace navigation block (matches: {count})")
 
 path.write_text(s, encoding="utf-8")
