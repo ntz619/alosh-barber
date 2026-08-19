@@ -177,12 +177,14 @@ const header = document.querySelector('.site-header');
 
     document.querySelectorAll('.reveal, .animate-on-scroll').forEach(el => revealObserver.observe(el));
 
-function setupCutsCarousel() {
-  const track = document.querySelector('[data-cuts-carousel]');
-  if (!track) return;
+const cutsCarouselControllers = new Map();
+
+function ensureCutsCarousel(track) {
+  if (!track) return null;
+  if (cutsCarouselControllers.has(track)) return cutsCarouselControllers.get(track);
 
   const originals = [...track.children];
-  if (!originals.length) return;
+  if (!originals.length) return null;
 
   track.style.scrollSnapType = 'none';
   track.style.scrollBehavior = 'auto';
@@ -197,9 +199,10 @@ function setupCutsCarousel() {
     return clone;
   };
 
-  // Large repeated buffer: last -> first is always just the next physical card.
-  // We only recycle the scroll coordinate several full loops later, while stopped.
-  const BUFFER_SETS = 4;
+  // A large repeated buffer makes every last -> first transition a normal move to
+  // the physically next card. Coordinate recycling only happens far away from the
+  // visible seam and uses exact card offsets, so there is no visible reset.
+  const BUFFER_SETS = 5;
   const leftCopies = document.createDocumentFragment();
   for (let set = 0; set < BUFFER_SETS; set += 1) {
     originals.forEach(card => leftCopies.appendChild(cloneCard(card)));
@@ -213,31 +216,25 @@ function setupCutsCarousel() {
   track.append(rightCopies);
 
   const count = originals.length;
-  const totalSets = BUFFER_SETS * 2 + 1;
   const middleSet = BUFFER_SETS;
+  const totalSets = BUFFER_SETS * 2 + 1;
   const middleStart = middleSet * count;
   const AUTO_DELAY = 3200;
   const RESUME_DELAY = 3600;
   const AUTO_DURATION = 720;
 
-  let period = 0;
   let autoTimer = null;
   let manualTimer = null;
   let animationFrame = null;
   let autoAnimating = false;
   let suppressScroll = false;
   let dragging = false;
+  let active = false;
   let dragStartX = 0;
   let dragStartScrollLeft = 0;
 
   const cards = () => [...track.children];
   const centeredLeft = card => card.offsetLeft + card.offsetWidth / 2 - track.clientWidth / 2;
-
-  const updatePeriod = () => {
-    const first = track.children[middleStart];
-    const repeatedFirst = track.children[middleStart + count];
-    if (first && repeatedFirst) period = repeatedFirst.offsetLeft - first.offsetLeft;
-  };
 
   const nearestIndex = () => {
     const viewportCenter = track.scrollLeft + track.clientWidth / 2;
@@ -252,36 +249,27 @@ function setupCutsCarousel() {
         nearest = index;
       }
     });
-
     return nearest;
   };
 
-  const jumpBy = amount => {
-    if (!amount) return;
-    suppressScroll = true;
-    track.scrollLeft += amount;
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => { suppressScroll = false; });
-    });
-  };
-
-  const maybeRecenter = () => {
-    updatePeriod();
-    let index = nearestIndex();
+  const jumpToEquivalentMiddleCard = index => {
     const setIndex = Math.floor(index / count);
+    if (setIndex > 1 && setIndex < totalSets - 2) return index;
 
-    // Keep two complete untouched sets on both sides. Normal last->first autoplay
-    // transitions never call this branch, so there is no seam reset every cycle.
-    if (setIndex <= 1 || setIndex >= totalSets - 2) {
-      const logicalIndex = index % count;
-      const targetIndex = middleStart + logicalIndex;
-      const setDelta = middleSet - setIndex;
-      jumpBy(setDelta * period);
-      index = targetIndex;
-    }
+    const logicalIndex = ((index % count) + count) % count;
+    const targetIndex = middleStart + logicalIndex;
+    const source = track.children[index];
+    const target = track.children[targetIndex];
+    if (!source || !target) return index;
 
-    return index;
+    const exactDelta = target.offsetLeft - source.offsetLeft;
+    suppressScroll = true;
+    track.scrollLeft += exactDelta;
+    requestAnimationFrame(() => requestAnimationFrame(() => { suppressScroll = false; }));
+    return targetIndex;
   };
+
+  const maybeRecenter = () => jumpToEquivalentMiddleCard(nearestIndex());
 
   const clearAuto = () => {
     if (autoTimer) clearTimeout(autoTimer);
@@ -307,28 +295,29 @@ function setupCutsCarousel() {
     autoAnimating = true;
 
     const step = now => {
+      if (!active) {
+        cancelAnimation();
+        return;
+      }
       const progress = Math.min((now - startedAt) / duration, 1);
       const eased = 1 - Math.pow(1 - progress, 3);
       track.scrollLeft = startLeft + delta * eased;
-
       if (progress < 1) {
         animationFrame = requestAnimationFrame(step);
-        return;
+      } else {
+        animationFrame = null;
+        autoAnimating = false;
+        onDone?.();
       }
-
-      animationFrame = null;
-      autoAnimating = false;
-      onDone?.();
     };
-
     animationFrame = requestAnimationFrame(step);
   };
 
-  const scheduleAuto = (delay = AUTO_DELAY) => {
+  function scheduleAuto(delay = AUTO_DELAY) {
     clearAuto();
-    if (reducedMotion) return;
+    if (!active || reducedMotion) return;
     autoTimer = setTimeout(advance, delay);
-  };
+  }
 
   const beginManualInteraction = () => {
     clearAuto();
@@ -336,15 +325,17 @@ function setupCutsCarousel() {
     cancelAnimation();
   };
 
-  const scheduleResume = (autoplayDelay = RESUME_DELAY) => {
+  const scheduleResume = (delay = RESUME_DELAY) => {
     clearManual();
     manualTimer = setTimeout(() => {
+      if (!active) return;
       maybeRecenter();
-      scheduleAuto(autoplayDelay);
-    }, 240);
+      scheduleAuto(delay);
+    }, 220);
   };
 
   function advance() {
+    if (!active) return;
     if (dragging || document.visibilityState !== 'visible') {
       scheduleAuto(900);
       return;
@@ -353,18 +344,15 @@ function setupCutsCarousel() {
     const current = maybeRecenter();
     const target = track.children[current + 1];
     if (!target) {
-      maybeRecenter();
       scheduleAuto(500);
       return;
     }
 
-    // No reset here after the last image: the next repeated first image is already
-    // physically next in the strip, so the visual motion remains continuous.
     animateTo(centeredLeft(target), AUTO_DURATION, () => scheduleAuto());
   }
 
   track.addEventListener('scroll', () => {
-    if (autoAnimating || suppressScroll || dragging) return;
+    if (!active || autoAnimating || suppressScroll || dragging) return;
     clearAuto();
     scheduleResume();
   }, { passive: true });
@@ -380,12 +368,9 @@ function setupCutsCarousel() {
     if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
     event.preventDefault();
     beginManualInteraction();
-
     const current = maybeRecenter();
-    const direction = event.key === 'ArrowRight' ? 1 : -1;
-    const target = track.children[current + direction];
+    const target = track.children[current + (event.key === 'ArrowRight' ? 1 : -1)];
     if (!target) return;
-
     animateTo(centeredLeft(target), 560, () => scheduleAuto(RESUME_DELAY));
   });
 
@@ -418,44 +403,125 @@ function setupCutsCarousel() {
   track.addEventListener('pointercancel', stopDragging);
   track.addEventListener('lostpointercapture', stopDragging);
 
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible') scheduleAuto(900);
-    else beginManualInteraction();
-  });
+  const controller = {
+    setActive(nextActive) {
+      active = nextActive;
+      clearAuto();
+      clearManual();
+      cancelAnimation();
+      if (!active) return;
 
-  window.addEventListener('resize', () => {
-    beginManualInteraction();
-    requestAnimationFrame(() => {
-      updatePeriod();
-      const current = nearestIndex();
-      const logicalIndex = current % count;
-      const target = track.children[middleStart + logicalIndex];
-      if (target) {
-        suppressScroll = true;
-        track.scrollLeft = centeredLeft(target);
-        requestAnimationFrame(() => { suppressScroll = false; });
-      }
-      scheduleAuto(1000);
-    });
-  });
-
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      updatePeriod();
-      const first = track.children[middleStart];
-      if (first) {
-        suppressScroll = true;
-        track.scrollLeft = centeredLeft(first);
-        requestAnimationFrame(() => {
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        const current = nearestIndex();
+        const hasUsefulPosition = track.scrollLeft > 1 && current >= 0;
+        if (!hasUsefulPosition) {
+          const first = track.children[middleStart];
+          if (first) {
+            suppressScroll = true;
+            track.scrollLeft = centeredLeft(first);
+            requestAnimationFrame(() => requestAnimationFrame(() => { suppressScroll = false; }));
+          }
+        } else {
+          maybeRecenter();
+        }
+        scheduleAuto(1400);
+      }));
+    },
+    recenterForResize() {
+      if (!active) return;
+      beginManualInteraction();
+      requestAnimationFrame(() => {
+        const current = nearestIndex();
+        const logicalIndex = ((current % count) + count) % count;
+        const target = track.children[middleStart + logicalIndex];
+        if (target) {
+          suppressScroll = true;
+          track.scrollLeft = centeredLeft(target);
           requestAnimationFrame(() => { suppressScroll = false; });
-        });
-      }
-      scheduleAuto(1400);
-    });
-  });
+        }
+        scheduleAuto(1000);
+      });
+    }
+  };
+
+  cutsCarouselControllers.set(track, controller);
+  return controller;
 }
 
-setupCutsCarousel();
+function initGenderExperience() {
+  const dock = document.querySelector('[data-gender-dock]');
+  const buttons = [...document.querySelectorAll('[data-gender-toggle]')];
+  const panels = [...document.querySelectorAll('[data-gender-panel]')];
+  const tracks = [...document.querySelectorAll('[data-cuts-carousel]')];
+  const genderWord = document.querySelector('[data-gender-word]');
+  const cuts = document.getElementById('cuts');
+  const salon = document.getElementById('salon');
+  if (!dock || !buttons.length || !cuts || !salon) return;
+
+  let selectedGender = 'herren';
+
+  const applyGender = gender => {
+    selectedGender = gender;
+    document.body.dataset.gender = gender;
+    if (genderWord) genderWord.textContent = gender === 'damen' ? 'DAMEN' : 'HERREN';
+
+    buttons.forEach(button => {
+      const activeButton = button.dataset.genderToggle === gender;
+      button.classList.toggle('is-active', activeButton);
+      button.setAttribute('aria-pressed', String(activeButton));
+    });
+
+    panels.forEach(panel => {
+      panel.hidden = panel.dataset.genderPanel !== gender;
+    });
+
+    tracks.forEach(track => {
+      const shouldBeActive = track.dataset.cutsCarousel === gender;
+      const existing = cutsCarouselControllers.get(track);
+      if (!shouldBeActive) {
+        existing?.setActive(false);
+        return;
+      }
+
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        ensureCutsCarousel(track)?.setActive(true);
+      }));
+    });
+  };
+
+  buttons.forEach(button => {
+    button.addEventListener('click', () => applyGender(button.dataset.genderToggle));
+  });
+
+  let dockRaf = 0;
+  const updateDockVisibility = () => {
+    dockRaf = 0;
+    const vh = window.innerHeight;
+    const cutsRect = cuts.getBoundingClientRect();
+    const salonRect = salon.getBoundingClientRect();
+    const reachedExamples = cutsRect.top <= vh * .72;
+    const beforeSalonVisuals = salonRect.top > vh * .66;
+    const visible = reachedExamples && beforeSalonVisuals;
+    dock.classList.toggle('is-visible', visible);
+    dock.setAttribute('aria-hidden', String(!visible));
+  };
+
+  const requestDockUpdate = () => {
+    if (dockRaf) return;
+    dockRaf = requestAnimationFrame(updateDockVisibility);
+  };
+
+  window.addEventListener('scroll', requestDockUpdate, { passive: true });
+  window.addEventListener('resize', () => {
+    requestDockUpdate();
+    cutsCarouselControllers.forEach(controller => controller.recenterForResize());
+  });
+
+  applyGender(selectedGender);
+  updateDockVisibility();
+}
+
+initGenderExperience();
 
     function createCarousel({ trackSelector, itemSelector, prevSelector, nextSelector, progressSelector, mode = 'offset', autoplay = 0 }) {
       const track = document.querySelector(trackSelector);

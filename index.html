@@ -21,7 +21,7 @@
     </a>
 
     <nav class="desktop-nav" aria-label="Hauptnavigation">
-      <a href="#services">Services</a>
+      <a href="#services">Preise</a>
       <a href="#salon">Salon</a>
       <a href="#reviews">Reviews</a>
       <a href="#visit">Visit</a>
@@ -36,7 +36,7 @@
 
   <div class="mobile-menu" aria-hidden="true">
     <nav>
-      <a href="#services">Services</a>
+      <a href="#services">Preise</a>
       <a href="#salon">Salon</a>
       <a href="#reviews">Reviews</a>
       <a href="#visit">Visit</a>
@@ -92,26 +92,48 @@
       </div>
     </section>
 
-    <section class="cuts-showcase" id="cuts" aria-label="Example haircuts">
+    <section class="cuts-showcase" id="cuts" aria-label="Frisuren Beispiele">
       <div class="cuts-stage">
-        <div class="cuts-word parallax" data-speed="0.045" aria-hidden="true">CUTS</div>
-        <div class="cuts-carousel">
-          <div class="cuts-track" data-cuts-carousel tabindex="0" aria-label="Haircut examples. Swipe or drag sideways.">
+        <div class="cuts-word parallax" data-speed="0.045" data-gender-word aria-hidden="true">HERREN</div>
+
+        <div class="cuts-carousel gender-panel" data-gender-panel="herren">
+          <div class="cuts-track" data-cuts-carousel="herren" tabindex="0" aria-label="Herren Frisuren. Seitlich wischen oder ziehen.">
             <figure class="cut-card animate-on-scroll" style="--delay:.02s">
-              <img loading="lazy" src="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?auto=format&fit=crop&w=1000&q=88" alt="Example modern fade haircut" />
+              <img loading="lazy" src="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?auto=format&fit=crop&w=1000&q=88" alt="Moderner Herren Fade" />
               <figcaption>Clean Fade</figcaption>
             </figure>
             <figure class="cut-card animate-on-scroll" style="--delay:.1s">
-              <img loading="lazy" src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=1000&q=88" alt="Example textured men's haircut" />
+              <img loading="lazy" src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=1000&q=88" alt="Texturierter Herren Haarschnitt" />
               <figcaption>Texture</figcaption>
             </figure>
             <figure class="cut-card animate-on-scroll" style="--delay:.18s">
-              <img loading="lazy" src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?auto=format&fit=crop&w=1000&q=88" alt="Example classic men's barber haircut" />
+              <img loading="lazy" src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?auto=format&fit=crop&w=1000&q=88" alt="Klassischer Herren Haarschnitt" />
               <figcaption>Classic</figcaption>
             </figure>
             <figure class="cut-card animate-on-scroll" style="--delay:.26s">
-              <img loading="lazy" src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&w=1000&q=88" alt="Example beard and haircut combination" />
+              <img loading="lazy" src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&w=1000&q=88" alt="Herren Haarschnitt und Bart" />
               <figcaption>Cut + Beard</figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <div class="cuts-carousel gender-panel" data-gender-panel="damen" hidden>
+          <div class="cuts-track" data-cuts-carousel="damen" tabindex="0" aria-label="Damen Frisuren. Seitlich wischen oder ziehen.">
+            <figure class="cut-card animate-on-scroll in-view">
+              <img loading="lazy" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=1000&q=88" alt="Damen Frisur mit weichen Stufen" />
+              <figcaption>Soft Layers</figcaption>
+            </figure>
+            <figure class="cut-card animate-on-scroll in-view">
+              <img loading="lazy" src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1000&q=88" alt="Damen Frisur mit weichen Wellen" />
+              <figcaption>Soft Waves</figcaption>
+            </figure>
+            <figure class="cut-card animate-on-scroll in-view">
+              <img loading="lazy" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1000&q=88" alt="Moderner Damen Haarschnitt" />
+              <figcaption>Modern Cut</figcaption>
+            </figure>
+            <figure class="cut-card animate-on-scroll in-view">
+              <img loading="lazy" src="https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=1000&q=88" alt="Damen Farbe und Styling" />
+              <figcaption>Color + Style</figcaption>
             </figure>
           </div>
         </div>
@@ -123,38 +145,70 @@
         <div class="panel-inner cream">
           <div class="panel-grid">
             <div class="panel-copy cream-copy reveal reveal-left">
-              <div class="scroll-decor parallax" data-speed="0.16">CRAFT</div>
-              <h2>Sharp work.<br>Clean finish.</h2>
-              <p>From a timeless classic cut to a sharp fade and detailed beard care — every service is tailored to your look.</p>
+              <div class="scroll-decor parallax" data-speed="0.16">PREISE</div>
+              <h2>Schnitt. Pflege.<br>Styling.</h2>
+              <p>Wähle unten zwischen Damen und Herren. Preise und Leistungen wechseln direkt mit deiner Auswahl.</p>
             </div>
-            <div class="service-side reveal reveal-right">
-              <article class="service-card animate-on-scroll reveal-pop" style="--delay:.02s">
+
+            <div class="service-side gender-panel" data-gender-panel="herren">
+              <article class="service-card animate-on-scroll reveal-pop in-view">
                 <div>
-                  <h3>Classic Cut</h3>
-                  <p>Consultation, wash, cut and finish.</p>
+                  <h3>Herrenhaarschnitt</h3>
+                  <p>Beratung, Schnitt und Styling.</p>
                 </div>
                 <div class="service-price"><span>45 min</span><strong>32 €</strong></div>
               </article>
-              <article class="service-card animate-on-scroll reveal-pop" style="--delay:.1s">
+              <article class="service-card animate-on-scroll reveal-pop in-view">
                 <div>
                   <h3>Fade</h3>
-                  <p>Detailed blend with a clean silhouette.</p>
+                  <p>Saubere Übergänge und präzise Konturen.</p>
                 </div>
                 <div class="service-price"><span>50 min</span><strong>36 €</strong></div>
               </article>
-              <article class="service-card animate-on-scroll reveal-pop" style="--delay:.18s">
+              <article class="service-card animate-on-scroll reveal-pop in-view">
                 <div>
-                  <h3>Beard</h3>
-                  <p>Contours, hot towel and beard styling.</p>
+                  <h3>Bart</h3>
+                  <p>Konturen, Pflege und Bartstyling.</p>
                 </div>
                 <div class="service-price"><span>30 min</span><strong>24 €</strong></div>
               </article>
-              <article class="service-card animate-on-scroll reveal-pop" style="--delay:.26s">
+              <article class="service-card animate-on-scroll reveal-pop in-view">
                 <div>
-                  <h3>Cut + Beard</h3>
-                  <p>The complete appointment for both.</p>
+                  <h3>Schnitt + Bart</h3>
+                  <p>Das komplette Paket für Haare und Bart.</p>
                 </div>
                 <div class="service-price"><span>70 min</span><strong>52 €</strong></div>
+              </article>
+            </div>
+
+            <div class="service-side gender-panel" data-gender-panel="damen" hidden>
+              <article class="service-card animate-on-scroll reveal-pop in-view">
+                <div>
+                  <h3>Waschen · Schneiden · Föhnen</h3>
+                  <p>Beratung, Schnitt und vollständiges Styling.</p>
+                </div>
+                <div class="service-price"><span>60 min</span><strong>49 €</strong></div>
+              </article>
+              <article class="service-card animate-on-scroll reveal-pop in-view">
+                <div>
+                  <h3>Trockenschnitt</h3>
+                  <p>Präziser Schnitt ohne Waschen und Föhnen.</p>
+                </div>
+                <div class="service-price"><span>35 min</span><strong>34 €</strong></div>
+              </article>
+              <article class="service-card animate-on-scroll reveal-pop in-view">
+                <div>
+                  <h3>Ansatzfarbe</h3>
+                  <p>Farbe am Ansatz inklusive Pflege.</p>
+                </div>
+                <div class="service-price"><span>90 min</span><strong>48 €</strong></div>
+              </article>
+              <article class="service-card animate-on-scroll reveal-pop in-view">
+                <div>
+                  <h3>Farbe · Schnitt · Styling</h3>
+                  <p>Farbe, Schnitt, Pflege und Finish.</p>
+                </div>
+                <div class="service-price"><span>120 min</span><strong>82 €</strong></div>
               </article>
             </div>
           </div>
@@ -271,7 +325,7 @@
       <span class="brand-sub">Hair · Barber · Beauty</span>
     </a>
     <nav>
-      <a href="#services">Services</a>
+      <a href="#services">Preise</a>
       <a href="#salon">Salon</a>
       <a href="#reviews">Reviews</a>
       <a href="#visit">Visit</a>
@@ -279,6 +333,10 @@
     </nav>
     <span>© <span id="year"></span> ALOSH</span>
   </footer>
+  <nav class="gender-dock" data-gender-dock aria-label="Damen oder Herren" aria-hidden="true">
+    <button type="button" class="gender-dock-button is-active" data-gender-toggle="herren" aria-pressed="true">Herren</button>
+    <button type="button" class="gender-dock-button" data-gender-toggle="damen" aria-pressed="false">Damen</button>
+  </nav>
   <script src="script.js" defer></script>
 </body>
 </html>
