@@ -1,0 +1,32 @@
+name: Fix endless carousel
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - ".github/fix_endless_carousel.py"
+      - ".github/workflows/fix-endless-carousel.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Patch endless carousel
+        run: python .github/fix_endless_carousel.py
+      - name: Commit carousel changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add script.js styles.css
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Make haircut carousel seamless"
+            git push
+          fi
