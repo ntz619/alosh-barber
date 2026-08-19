@@ -1,0 +1,29 @@
+name: Translate site to German
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - ".github/translate-site-de.py"
+      - ".github/workflows/translate-site-de.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  translate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python .github/translate-site-de.py
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html script.js gender-scroll-fix.js
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Translate website fully to German"
+            git push
+          fi
