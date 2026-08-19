@@ -5,26 +5,26 @@
     if (document.body.dataset.dualBrandReady === 'true') return;
     document.body.dataset.dualBrandReady = 'true';
 
-    document.title = 'ALOSH × VIVO — Hair · Beauty · Barber';
+    document.title = 'ALOSH × VIVO — Haar · Kosmetik · Barber';
     const meta = document.querySelector('meta[name="description"]');
-    if (meta) meta.content = 'ALOSH × VIVO in Rostock – Herren bei ALOSH, Damen bei VIVO. Hair · Beauty · Barber an einer gemeinsamen Adresse.';
+    if (meta) meta.content = 'ALOSH × VIVO in Rostock – Herren bei ALOSH, Damen bei VIVO. Haar, Kosmetik und Barber an einer gemeinsamen Adresse.';
 
     const headerBrand = document.querySelector('.site-header .brand');
     if (headerBrand) {
       headerBrand.classList.add('brand-dual');
       headerBrand.setAttribute('aria-label', 'ALOSH und VIVO Startseite');
-      headerBrand.innerHTML = '<span class="brand-name"><span>ALOSH</span><i>×</i><span>VIVO</span></span><span class="brand-sub">Hair · Beauty · Barber</span>';
+      headerBrand.innerHTML = '<span class="brand-name"><span>ALOSH</span><i>×</i><span>VIVO</span></span><span class="brand-sub">Haar · Kosmetik · Barber</span>';
     }
 
     const heroCopy = document.querySelector('.hero-copy');
     if (heroCopy) {
       heroCopy.innerHTML = `
         <p class="hero-kicker">ALOSH × VIVO · Doberaner Straße 48 · Rostock</p>
-        <h1>Two names.<br>One salon.</h1>
-        <p>ALOSH for Herren. VIVO for Damen. Two distinct identities, one shared address and the same focus on precise, personal hair and beauty service.</p>
+        <h1>Zwei Namen.<br>Ein Salon.</h1>
+        <p>ALOSH für Herren. VIVO für Damen. Zwei eigenständige Marken, eine gemeinsame Adresse und derselbe Anspruch an präzise, persönliche Haar- und Kosmetikleistungen.</p>
         <div class="hero-actions">
-          <a class="button button-gold" href="#booking">Choose your studio</a>
-          <a class="button button-outline" href="#visit">See Location</a>
+          <a class="button button-gold" href="#booking">Studio wählen</a>
+          <a class="button button-outline" href="#visit">Standort ansehen</a>
         </div>`;
     }
 
@@ -32,12 +32,12 @@
     if (heroCard) {
       heroCard.setAttribute('aria-label', 'ALOSH und VIVO Kontakt');
       heroCard.innerHTML = `
-        <div class="hero-card-line"><span data-shop-status>Opening hours</span><strong data-shop-detail>Mon–Fri 08:30–19:00</strong></div>
+        <div class="hero-card-line"><span data-shop-status>Öffnungszeiten</span><strong data-shop-detail>Mo–Fr 08:30–19:00</strong></div>
         <div class="hero-dual-contact">
           <div class="hero-brand-contact alosh">
             <span>ALOSH · Herren</span>
             <strong>0177 7289259</strong>
-            <a href="tel:+491777289259">Call ALOSH</a>
+            <a href="tel:+491777289259">ALOSH anrufen</a>
           </div>
           <div class="hero-brand-contact vivo">
             <span>VIVO · Damen</span>
@@ -45,8 +45,8 @@
             <a href="https://www.instagram.com/avin_friseur/" target="_blank" rel="noopener">@avin_friseur</a>
           </div>
         </div>
-        <div class="hero-card-line"><span>Shared address</span><strong>Doberaner Str. 48</strong></div>
-        <div class="hero-shared-note">18057 Rostock · Hair · Beauty · Barber</div>`;
+        <div class="hero-card-line"><span>Gemeinsame Adresse</span><strong>Doberaner Str. 48</strong></div>
+        <div class="hero-shared-note">18057 Rostock · Haar · Kosmetik · Barber</div>`;
     }
 
     const heroDecor = document.querySelector('.hero-decor.two');
@@ -55,10 +55,10 @@
     const infoStrip = document.querySelector('.info-strip');
     if (infoStrip) {
       infoStrip.innerHTML = `
-        <div class="info-box"><strong>One address</strong><span>Doberaner Straße 48 · Rostock</span></div>
+        <div class="info-box"><strong>Eine Adresse</strong><span>Doberaner Straße 48 · Rostock</span></div>
         <div class="info-box info-brand alosh-info"><strong>ALOSH</strong><span>Herren · 0177 7289259</span></div>
         <div class="info-box info-brand vivo-info"><strong>VIVO</strong><span>Damen · 0162 9105910</span></div>
-        <div class="info-box"><strong data-shop-status>Opening hours</strong><span data-shop-detail>Mon–Fri 08:30 – 19:00</span></div>`;
+        <div class="info-box"><strong data-shop-status>Öffnungszeiten</strong><span data-shop-detail>Mo–Fr 08:30 – 19:00</span></div>`;
     }
 
     const visitContent = document.querySelector('.visit-content');
@@ -66,10 +66,10 @@
       const heading = visitContent.querySelector('h2');
       const intro = visitContent.querySelector(':scope > p');
       if (heading && !visitContent.querySelector('.shared-salon-mark')) {
-        heading.insertAdjacentHTML('beforebegin', '<div class="shared-salon-mark"><span>One salon · two studios</span><strong>ALOSH × VIVO</strong></div>');
+        heading.insertAdjacentHTML('beforebegin', '<div class="shared-salon-mark"><span>Ein Salon · zwei Studios</span><strong>ALOSH × VIVO</strong></div>');
       }
-      if (heading) heading.innerHTML = 'Same address.<br>Your studio.';
-      if (intro) intro.textContent = 'Choose Herren or Damen with the selector below. Contact and booking details change with your selection.';
+      if (heading) heading.innerHTML = 'Gleiche Adresse.<br>Dein Studio.';
+      if (intro) intro.textContent = 'Wähle unten Herren oder Damen. Kontakt- und Termininformationen wechseln passend zu deiner Auswahl.';
 
       const address = visitContent.querySelector('.address-box');
       if (address) address.innerHTML = '<strong>ALOSH × VIVO</strong><br>Doberaner Straße 48<br>18057 Rostock';
@@ -80,27 +80,27 @@
         booking.id = 'booking';
         booking.innerHTML = `
           <div class="brand-contact-panel" data-addon-gender-panel="herren">
-            <div class="brand-contact-head"><div><span>Herren</span><h3>ALOSH</h3></div><span>Barber</span></div>
+            <div class="brand-contact-head"><div><span>Herren</span><h3>ALOSH</h3></div><span>Herrenfriseur</span></div>
             <div class="brand-contact-details">
               <a href="tel:+491777289259">0177 7289259</a>
               <small>Doberaner Straße 48 · 18057 Rostock</small>
             </div>
             <div class="visit-actions">
-              <a class="button button-gold" href="tel:+491777289259">Call ALOSH</a>
-              <a class="button button-outline" href="https://www.google.com/maps/search/?api=1&query=Doberaner+Stra%C3%9Fe+48%2C+18057+Rostock" target="_blank" rel="noopener">Open in Maps</a>
+              <a class="button button-gold" href="tel:+491777289259">ALOSH anrufen</a>
+              <a class="button button-outline" href="https://www.google.com/maps/search/?api=1&query=Doberaner+Stra%C3%9Fe+48%2C+18057+Rostock" target="_blank" rel="noopener">In Maps öffnen</a>
             </div>
           </div>
           <div class="brand-contact-panel" data-addon-gender-panel="damen" hidden>
-            <div class="brand-contact-head"><div><span>Damen</span><h3>VIVO</h3></div><span>Hair · Beauty</span></div>
+            <div class="brand-contact-head"><div><span>Damen</span><h3>VIVO</h3></div><span>Haar · Kosmetik</span></div>
             <div class="brand-contact-details">
               <a href="tel:+491629105910">0162 9105910</a>
               <a href="https://www.instagram.com/avin_friseur/" target="_blank" rel="noopener">@avin_friseur</a>
               <small>Doberaner Straße 48 · 18057 Rostock</small>
             </div>
             <div class="visit-actions">
-              <a class="button button-gold" href="tel:+491629105910">Call VIVO</a>
+              <a class="button button-gold" href="tel:+491629105910">VIVO anrufen</a>
               <a class="button button-outline" href="https://www.instagram.com/avin_friseur/" target="_blank" rel="noopener">Instagram</a>
-              <a class="button button-outline" href="https://www.google.com/maps/search/?api=1&query=Doberaner+Stra%C3%9Fe+48%2C+18057+Rostock" target="_blank" rel="noopener">Open in Maps</a>
+              <a class="button button-outline" href="https://www.google.com/maps/search/?api=1&query=Doberaner+Stra%C3%9Fe+48%2C+18057+Rostock" target="_blank" rel="noopener">In Maps öffnen</a>
             </div>
           </div>`;
         oldBooking.replaceWith(booking);
@@ -113,7 +113,7 @@
     const footerBrand = document.querySelector('.footer .brand');
     if (footerBrand) {
       footerBrand.classList.add('brand-dual');
-      footerBrand.innerHTML = '<span class="brand-name"><span>ALOSH</span><i>×</i><span>VIVO</span></span><span class="brand-sub">Hair · Beauty · Barber</span>';
+      footerBrand.innerHTML = '<span class="brand-name"><span>ALOSH</span><i>×</i><span>VIVO</span></span><span class="brand-sub">Haar · Kosmetik · Barber</span>';
     }
 
     const footerYear = document.getElementById('year');
@@ -146,10 +146,10 @@
 
     const salonHeading = document.querySelector('#salon .panel-copy h2');
     const salonCopy = document.querySelector('#salon .panel-copy p');
-    if (salonHeading) salonHeading.innerHTML = gender === 'damen' ? 'VIVO.<br>Light & refined.' : 'ALOSH.<br>Dark & precise.';
+    if (salonHeading) salonHeading.innerHTML = gender === 'damen' ? 'VIVO.<br>Hell & elegant.' : 'ALOSH.<br>Dunkel & präzise.';
     if (salonCopy) salonCopy.textContent = gender === 'damen'
-      ? 'A lighter, calm identity for hair, color and beauty — still at the same shared Rostock salon.'
-      : 'A darker, focused identity for cuts, beard work and clean detail — at the same shared Rostock salon.';
+      ? 'Eine helle, ruhige Identität für Haare, Farbe und Kosmetik – weiterhin am gemeinsamen Standort in Rostock.'
+      : 'Eine dunkle, präzise Identität für Haarschnitte, Bart und klare Details – am gemeinsamen Standort in Rostock.';
   }
 
   function syncDockVisibility() {

@@ -83,7 +83,7 @@ const header = document.querySelector('.site-header');
         6: [8 * 60 + 30, 16 * 60]
       };
       const weekdayMap = { Sun:0, Mon:1, Tue:2, Wed:3, Thu:4, Fri:5, Sat:6 };
-      const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+      const dayNames = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
       const parts = new Intl.DateTimeFormat('en-GB', {
         timeZone: 'Europe/Berlin', weekday: 'short', hour: '2-digit', minute: '2-digit', hourCycle: 'h23'
       }).formatToParts(new Date());
@@ -93,22 +93,22 @@ const header = document.querySelector('.site-header');
       const hours = schedule[day];
       const formatTime = minutes => `${String(Math.floor(minutes / 60)).padStart(2,'0')}:${String(minutes % 60).padStart(2,'0')}`;
 
-      let status = 'Closed now';
+      let status = 'Jetzt geschlossen';
       let detail = '';
 
       if (hours && nowMinutes >= hours[0] && nowMinutes < hours[1]) {
-        status = 'Open now';
-        detail = `Until ${formatTime(hours[1])}`;
+        status = 'Jetzt geöffnet';
+        detail = `Bis ${formatTime(hours[1])} Uhr`;
       } else if (hours && nowMinutes < hours[0]) {
-        status = 'Opens today';
-        detail = formatTime(hours[0]);
+        status = 'Öffnet heute';
+        detail = `${formatTime(hours[0])} Uhr`;
       } else {
         for (let offset = 1; offset <= 7; offset++) {
           const nextDay = (day + offset) % 7;
           const nextHours = schedule[nextDay];
           if (!nextHours) continue;
-          status = day === 0 ? 'Closed today' : 'Closed now';
-          detail = `Opens ${offset === 1 ? 'tomorrow' : dayNames[nextDay]} ${formatTime(nextHours[0])}`;
+          status = day === 0 ? 'Heute geschlossen' : 'Jetzt geschlossen';
+          detail = `Öffnet ${offset === 1 ? 'morgen' : dayNames[nextDay]} um ${formatTime(nextHours[0])} Uhr`;
           break;
         }
       }
@@ -465,7 +465,7 @@ function initGenderExperience() {
     selectedGender = gender;
     document.body.dataset.gender = gender;
     if (genderWord) genderWord.textContent = gender === 'damen' ? 'DAMEN' : 'HERREN';
-    if (priceTitle) priceTitle.textContent = gender === 'damen' ? 'Damen.' : 'Herren.';
+    if (priceTitle) priceTitle.textContent = gender === 'damen' ? 'Damen' : 'Herren';
 
     buttons.forEach(button => {
       const activeButton = button.dataset.genderToggle === gender;
