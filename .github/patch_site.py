@@ -89,3 +89,4 @@ if marker not in s:
     s = s.replace(needle, needle + navigation, 1)
 
 path.write_text(s, encoding="utf-8")
+# trigger workflow after workflow definition exists
