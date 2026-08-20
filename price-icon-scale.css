@@ -3,7 +3,7 @@
   /* One intrinsically repeating diagonal gradient. Its 560px color period
      projects onto a 588.79px horizontal tile at 108deg, so every repeat joins
      at the identical color and angle without a visible seam. */
-  --metal-gold:repeating-linear-gradient(108deg,#9a672b 0px,#be8739 45px,#d9ad5d 78px,#efd59e 95px,#c9913b 129px,#e3ba6e 168px,#aa702b 213px,#805023 280px,#aa702b 347px,#e3ba6e 392px,#c9913b 431px,#efd59e 465px,#d9ad5d 482px,#be8739 515px,#9a672b 560px);
+  --metal-gold:repeating-linear-gradient(108deg,#9a672b 0px,#be8739 46px,#d9ad5d 82px,#edd095 96px,#c9913b 126px,#e3ba6e 164px,#aa702b 206px,#d4a657 246px,#efd59e 266px,#bd8133 318px,#ddb160 378px,#a56b29 430px,#d1a052 488px,#9a672b 560px);
   --metal-gold-size:588.79px 100%;
 }
 
@@ -321,7 +321,7 @@ body[data-gender="damen"] .gender-dock.is-docked .gender-dock-button.is-active{
 #visit{
   position:relative;
   z-index:2;
-  border-radius:var(--radius);
+  border-radius:var(--radius) var(--radius) 0 0;
   overflow:hidden;
 }
 
@@ -657,8 +657,9 @@ body[data-gender="damen"] .info-strip .info-feature:not(.info-feature-dark){
 }
 
 /* Lift the VIVO portrait slightly while retaining the multi-directional fade. */
-.brand-contact-panel[data-addon-gender-panel="damen"]::before{
-  background-position:1% 19%;
+#visit .brand-contact-panel[data-addon-gender-panel="damen"]::before{
+  background-size:280% auto;
+  background-position:14% 75%;
 }
 
 /* A denser footer, with no small-type shadow doubling on the metallic logo. */
@@ -677,8 +678,8 @@ body[data-gender="damen"] .info-strip .info-feature:not(.info-feature-dark){
 @media(max-width:780px){
   .gender-dock-slot{height:84px}
   .gender-dock{bottom:calc(12px + env(safe-area-inset-bottom))}
-  .brand-contact-panel[data-addon-gender-panel="damen"]::before{
-    background-position:1% 18%;
+  #visit .brand-contact-panel[data-addon-gender-panel="damen"]::before{
+    background-position:14% 78%;
   }
   .footer{
     display:grid;
@@ -771,4 +772,23 @@ body[data-gender="damen"] .info-strip .info-feature:not(.info-feature-dark){
     border-radius:22px;
     overflow:hidden;
   }
+  .info-strip .info-feature:last-child strong{
+    font-size:clamp(29px,8vw,34px)!important;
+  }
+}
+
+/* A local dark veil keeps the metallic header mark readable over the bright
+   hero without darkening the rest of the photograph again. */
+.site-header .brand-dual{
+  position:relative;
+  isolation:isolate;
+}
+.site-header .brand-dual::before{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  inset:-15px -26px;
+  pointer-events:none;
+  background:radial-gradient(ellipse at 38% 50%,rgba(0,0,0,.76) 0%,rgba(0,0,0,.52) 48%,rgba(0,0,0,.18) 72%,transparent 100%);
+  filter:blur(7px);
 }
