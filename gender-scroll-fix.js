@@ -30,13 +30,13 @@
         <div class="ornament-divider hero-card-ornament" aria-hidden="true"><span>❦</span></div>
         <div class="hero-dual-contact">
           <a class="hero-brand-contact alosh" href="tel:+491777289259" aria-label="ALOSH unter 0177 7289259 anrufen">
-            <span>ALOSH · Herren</span>
+            <span>Herren</span>
             <strong>0177 7289259</strong>
             <small>ALOSH anrufen</small>
             <svg class="hero-call-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.69 2.8a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.33 1.84.56 2.8.69A2 2 0 0 1 22 16.92Z"/></svg>
           </a>
           <a class="hero-brand-contact vivo" href="tel:+491629105910" aria-label="VIVO unter 0162 9105910 anrufen">
-            <span>VIVO · Damen</span>
+            <span>Damen</span>
             <strong>0162 9105910</strong>
             <small>VIVO anrufen</small>
             <svg class="hero-call-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.69 2.8a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.33 1.84.56 2.8.69A2 2 0 0 1 22 16.92Z"/></svg>
@@ -91,7 +91,7 @@
                 <svg class="instagram-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" class="instagram-icon-dot"/></svg>
                 <span>@alosh.barbershop</span>
               </a>
-              <a class="button button-outline button-with-icon" href="https://www.google.com/maps/search/?api=1&query=Doberaner+Stra%C3%9Fe+48%2C+18057+Rostock" target="_blank" rel="noopener">
+              <a class="button button-outline button-with-icon" href="https://maps.app.goo.gl/WTr4e5A8BV3Z1e949" target="_blank" rel="noopener">
                 <svg class="action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
                 <span>In Maps öffnen</span>
               </a>
@@ -113,7 +113,7 @@
                 <svg class="instagram-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" class="instagram-icon-dot"/></svg>
                 <span>@avin_friseur</span>
               </a>
-              <a class="button button-outline button-with-icon" href="https://www.google.com/maps/search/?api=1&query=Doberaner+Stra%C3%9Fe+48%2C+18057+Rostock" target="_blank" rel="noopener">
+              <a class="button button-outline button-with-icon" href="https://maps.app.goo.gl/WTr4e5A8BV3Z1e949" target="_blank" rel="noopener">
                 <svg class="action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
                 <span>In Maps öffnen</span>
               </a>
@@ -122,9 +122,6 @@
         oldBooking.replaceWith(booking);
       }
     }
-
-    const map = document.querySelector('.visit-map iframe');
-    if (map) map.src = 'https://www.google.com/maps?q=Doberaner+Stra%C3%9Fe+48,+18057+Rostock&output=embed';
 
     const footerBrand = document.querySelector('.footer .brand');
     if (footerBrand) {
@@ -146,8 +143,8 @@
 
     const herrenButton = document.querySelector('[data-gender-toggle="herren"]');
     const damenButton = document.querySelector('[data-gender-toggle="damen"]');
-    if (herrenButton) herrenButton.innerHTML = 'Herren<small>ALOSH</small>';
-    if (damenButton) damenButton.innerHTML = 'Damen<small>VIVO</small>';
+    if (herrenButton) herrenButton.textContent = 'Herren';
+    if (damenButton) damenButton.textContent = 'Damen';
   }
 
   function syncGenderPresentation() {

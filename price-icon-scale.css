@@ -110,7 +110,13 @@ html.gender-switching main{
 .hero-card>.hero-card-line:first-child{border-bottom:0;padding-bottom:5px}
 .hero-card>.hero-card-line:first-child>span,
 .hero-card>.hero-card-line:first-child>strong{white-space:nowrap}
-.hero-card>.hero-card-line:first-child>strong{font-size:clamp(27px,2.35vw,31px)}
+.hero-card>.hero-card-line:first-child>strong{
+  min-width:0;
+  max-width:65%;
+  font-size:clamp(17px,1.55vw,27px);
+  letter-spacing:-.015em;
+  text-align:right;
+}
 .hero-card-ornament{margin:0 0 13px;--ornament-color:rgba(224,192,136,.66)}
 .brand-contact-panel .brand-contact-head{border-bottom:0;padding-bottom:4px}
 .contact-card-ornament{width:min(190px,100%);margin:7px 0 1px;--ornament-color:rgba(167,120,62,.72)}
@@ -1000,4 +1006,127 @@ body[data-gender="damen"] .gender-dock.is-docked .gender-dock-button.is-active{
   #visit .brand-contact-panel[data-addon-gender-panel="damen"]::before{
     background-position:24% 50%;
   }
+}
+
+/* Privacy-first map: Google is not contacted until the visitor explicitly
+   loads the iframe. */
+#map.visit-map{
+  --map-min-height:560px;
+  position:relative;
+  display:grid;
+  min-height:var(--map-min-height);
+  overflow:hidden;
+  isolation:isolate;
+  background:#101113;
+}
+.map-preview{
+  position:absolute;
+  z-index:0;
+  inset:-18px;
+  width:calc(100% + 36px);
+  height:calc(100% + 36px);
+  object-fit:cover;
+  object-position:50% 47%;
+  filter:blur(6px) saturate(.74) brightness(1.05);
+  transform:scale(1.035);
+  transition:opacity .25s ease;
+}
+.map-consent{
+  position:relative;
+  z-index:1;
+  min-height:var(--map-min-height);
+  padding:clamp(30px,6vw,72px);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  color:#181510;
+  background:
+    radial-gradient(circle at 50% 45%,rgba(247,241,232,.2),rgba(240,232,220,.46) 74%),
+    linear-gradient(180deg,rgba(247,241,232,.14),rgba(240,232,220,.34));
+}
+.map-consent[hidden]{display:none}
+.map-consent-icon{
+  width:54px;
+  height:54px;
+  margin-bottom:18px;
+  fill:none;
+  stroke:#d6a55c;
+  stroke-width:1.5;
+}
+.map-consent-kicker{
+  margin:0 0 10px!important;
+  color:#d6a55c!important;
+  font-size:12px!important;
+  font-weight:700;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+}
+.map-consent h3{
+  max-width:660px;
+  margin:0;
+  font-size:clamp(36px,4.5vw,62px);
+  line-height:.98;
+  text-shadow:0 2px 24px rgba(255,255,255,.76);
+}
+.map-consent-actions{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:12px;
+  margin-top:24px;
+}
+.map-consent-actions .button{min-width:210px}
+.map-consent small{
+  max-width:520px;
+  margin-top:14px;
+  color:#5f574d;
+  font-size:12px;
+  line-height:1.45;
+  text-shadow:0 1px 10px rgba(255,255,255,.82);
+}
+.map-consent small a{color:#e0b675;text-decoration:underline;text-underline-offset:3px}
+#map.map-is-loaded .map-preview{display:none}
+#map.map-is-loaded iframe{width:100%;height:100%;min-height:var(--map-min-height);border:0;display:block}
+.map-disable-button{
+  position:absolute;
+  z-index:3;
+  top:16px;
+  right:16px;
+  min-height:42px;
+  padding:0 18px;
+  border:1px solid rgba(255,255,255,.28);
+  border-radius:999px;
+  background:rgba(10,10,10,.84);
+  color:#fff;
+  font:600 13px/1 Inter,system-ui,sans-serif;
+  cursor:pointer;
+  backdrop-filter:blur(10px);
+  box-shadow:0 8px 24px rgba(0,0,0,.22);
+}
+.map-disable-button:hover,.map-disable-button:focus-visible{border-color:#d6a55c;outline:none}
+body[data-gender="damen"] .map-consent{
+  color:#181510;
+  background:
+    radial-gradient(circle at 50% 45%,rgba(249,244,236,.2),rgba(241,234,223,.46) 74%),
+    linear-gradient(180deg,rgba(249,244,236,.14),rgba(241,234,223,.34));
+}
+body[data-gender="damen"] .map-consent small{color:#5f574d}
+@media(max-width:1100px){#map.visit-map{--map-min-height:400px}}
+@media(max-width:780px){
+  #map.visit-map{--map-min-height:390px}
+  .map-preview{
+    inset:-14px;
+    width:calc(100% + 28px);
+    height:calc(100% + 28px);
+    object-position:50% 47%;
+    filter:blur(5px) saturate(.74) brightness(1.05);
+    transform:scale(1.08);
+  }
+  .map-consent{padding:32px 24px}
+  .map-consent-icon{width:44px;height:44px;margin-bottom:14px}
+  .map-consent-actions{width:100%}
+  .map-consent-actions .button{width:100%;min-width:0}
+  .map-disable-button{top:10px;right:10px}
 }
