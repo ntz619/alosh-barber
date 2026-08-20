@@ -3,9 +3,9 @@
     if (document.body.dataset.dualBrandReady === 'true') return;
     document.body.dataset.dualBrandReady = 'true';
 
-    document.title = 'ALOSH × VIVO — Haar · Kosmetik · Barber';
+    document.title = 'ALOSH × VIVO | Friseur & Barbershop in Rostock';
     const meta = document.querySelector('meta[name="description"]');
-    if (meta) meta.content = 'ALOSH × VIVO in Rostock – Herren bei ALOSH, Damen bei VIVO. Haar, Kosmetik und Barber an einer gemeinsamen Adresse.';
+    if (meta) meta.content = 'ALOSH Herrenfriseur und VIVO Damenfriseur in der Doberaner Straße 48 in Rostock. Preise, Öffnungszeiten, Bewertungen und direkter Kontakt.';
 
     const headerBrand = document.querySelector('.site-header .brand');
     if (headerBrand) {

@@ -578,6 +578,53 @@ function initGenderExperience() {
 
 initGenderExperience();
 
+function initPageLoadCue() {
+  const cue = document.querySelector('[data-page-load-cue]');
+  const scrollButton = document.querySelector('[data-page-scroll-cue]');
+  const dockButtons = [...document.querySelectorAll('[data-gender-toggle]')];
+  const target = document.getElementById('cuts');
+  if (!cue || !scrollButton || !target) return;
+
+  let hideTimer = 0;
+  let dismissed = false;
+
+  const hide = () => {
+    if (dismissed) return;
+    dismissed = true;
+    window.clearTimeout(hideTimer);
+    cue.classList.remove('is-visible');
+    cue.setAttribute('aria-hidden', 'true');
+    scrollButton.setAttribute('tabindex', '-1');
+  };
+
+  const show = () => {
+    if (dismissed || window.scrollY > 72) return;
+    cue.classList.add('is-visible');
+    cue.setAttribute('aria-hidden', 'false');
+    scrollButton.removeAttribute('tabindex');
+    hideTimer = window.setTimeout(hide, 5600);
+  };
+
+  scrollButton.addEventListener('click', () => {
+    hide();
+    target.scrollIntoView({
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+      block: 'start'
+    });
+  });
+  dockButtons.forEach(button => button.addEventListener('click', hide, { once: true }));
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 72) hide();
+  }, { passive: true });
+
+  window.setTimeout(show, 850);
+}
+
+initPageLoadCue();
+
+const galleryTrack = document.querySelector('.gallery-track');
+ensureCutsCarousel(galleryTrack)?.setActive(true);
+
     function createCarousel({ trackSelector, itemSelector, prevSelector, nextSelector, progressSelector, mode = 'offset', autoplay = 0 }) {
       const track = document.querySelector(trackSelector);
       const items = [...document.querySelectorAll(itemSelector)];
@@ -643,14 +690,6 @@ initGenderExperience();
       update();
       restart();
     }
-
-    createCarousel({
-      trackSelector: '.gallery-track',
-      itemSelector: '.gallery-card',
-      prevSelector: '[data-gallery-prev]',
-      nextSelector: '[data-gallery-next]',
-      mode: 'offset'
-    });
 
     createCarousel({
       trackSelector: '.review-track',

@@ -120,7 +120,10 @@ body[data-gender="herren"] .price-title-ornament{--ornament-color:rgba(224,192,1
 
 .hero .hero-kicker{letter-spacing:.04em}
 .hero::before{
-  background:url("assets/hero-alosh-vivo-custom.png") 50% 48%/cover no-repeat;
+  background-image:image-set(url("assets/hero-alosh-vivo-custom.webp") type("image/webp"),url("assets/hero-alosh-vivo-custom.png") type("image/png"));
+  background-position:50% 48%;
+  background-size:cover;
+  background-repeat:no-repeat;
   transition:background-position .6s cubic-bezier(.22,.61,.36,1);
 }
 .hero::after{
@@ -266,6 +269,35 @@ body[data-gender="damen"] .gender-dock-button.is-active{background:#9b6d34;color
   transition:transform .3s cubic-bezier(.22,.61,.36,1),background-color .3s ease;
   pointer-events:none;
 }
+
+/* A restrained gold trace travels around the selector without changing its
+   glass surface or the metallic active pill. */
+@property --dock-border-angle{
+  syntax:"<angle>";
+  inherits:false;
+  initial-value:0deg;
+}
+.gender-dock::after{
+  content:"";
+  position:absolute;
+  inset:-1px;
+  z-index:2;
+  padding:1px;
+  border-radius:inherit;
+  pointer-events:none;
+  background:conic-gradient(from var(--dock-border-angle),transparent 0deg,transparent 250deg,rgba(224,177,91,.18) 278deg,rgba(255,225,161,.78) 302deg,rgba(193,127,40,.3) 326deg,transparent 352deg);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  mask-composite:exclude;
+  opacity:.62;
+  animation:dock-gold-border 7.5s linear infinite;
+}
+body[data-gender="damen"] .gender-dock::after{
+  background:conic-gradient(from var(--dock-border-angle),transparent 0deg,transparent 244deg,rgba(145,91,29,.24) 272deg,rgba(190,125,38,.82) 298deg,rgba(245,206,125,.96) 310deg,rgba(153,92,25,.48) 334deg,transparent 355deg);
+  opacity:.9;
+}
+@keyframes dock-gold-border{to{--dock-border-angle:360deg}}
 body[data-gender="damen"] .gender-dock::before{
   background-color:var(--gold);
   transform:translateX(calc(100% + 6px));
@@ -467,7 +499,7 @@ body[data-gender="herren"] #services [data-gender-panel="herren"] .free-extra-gr
   width:68%;
   height:96%;
   pointer-events:none;
-  background-image:url("assets/hero-alosh-vivo-custom.png");
+  background-image:image-set(url("assets/hero-alosh-vivo-custom.webp") type("image/webp"),url("assets/hero-alosh-vivo-custom.png") type("image/png"));
   background-repeat:no-repeat;
   background-size:200% auto;
   -webkit-mask-image:linear-gradient(to bottom,transparent 0%,rgba(0,0,0,.45) 10%,#000 22%,#000 100%),radial-gradient(ellipse 78% 82% at 70% 24%,#000 0%,rgba(0,0,0,.92) 34%,rgba(0,0,0,.48) 54%,transparent 80%);
@@ -637,7 +669,7 @@ body[data-gender="herren"] #services [data-gender-panel="herren"] .free-extra-gr
   position:relative;
   z-index:3;
   height:92px;
-  background:#eee6da;
+  background:var(--cream-2);
   border-top:1px solid rgba(23,21,17,.08);
   border-bottom:1px solid rgba(23,21,17,.08);
 }
@@ -656,10 +688,13 @@ body[data-gender="damen"] .info-strip .info-feature:not(.info-feature-dark){
   border:1px solid rgba(23,21,17,.18);
 }
 
-/* Lift the VIVO portrait slightly while retaining the multi-directional fade. */
+/* Keep VIVO's face locked to a stable portrait window. Scaling from the
+   card height instead of its width prevents wide or shallow viewports from
+   pushing the face outside the decorative image area. */
 #visit .brand-contact-panel[data-addon-gender-panel="damen"]::before{
-  background-size:280% auto;
-  background-position:14% 75%;
+  max-width:440px;
+  background-size:auto 140%;
+  background-position:22% 50%;
 }
 
 /* A denser footer, with no small-type shadow doubling on the metallic logo. */
@@ -679,7 +714,8 @@ body[data-gender="damen"] .info-strip .info-feature:not(.info-feature-dark){
   .gender-dock-slot{height:84px}
   .gender-dock{bottom:calc(12px + env(safe-area-inset-bottom))}
   #visit .brand-contact-panel[data-addon-gender-panel="damen"]::before{
-    background-position:14% 78%;
+    max-width:390px;
+    background-position:22% 50%;
   }
   .footer{
     display:grid;
@@ -703,6 +739,88 @@ body[data-gender="damen"] .info-strip .info-feature:not(.info-feature-dark){
     white-space:nowrap;
     font-size:11px!important;
   }
+}
+
+@media(max-width:340px){
+  #visit .brand-contact-panel[data-addon-gender-panel="damen"]::before{
+    background-position:25% 50%;
+  }
+}
+
+/* Accessible alternative text for decorative CSS imagery. */
+.sr-only{
+  position:absolute!important;
+  width:1px!important;
+  height:1px!important;
+  padding:0!important;
+  margin:-1px!important;
+  overflow:hidden!important;
+  clip:rect(0,0,0,0)!important;
+  white-space:nowrap!important;
+  border:0!important;
+}
+
+/* A short, non-blocking orientation hint on first load. It deliberately
+   disappears as soon as visitors interact, so it never competes with content. */
+.page-load-cue{
+  position:fixed;
+  left:50%;
+  bottom:80px;
+  z-index:113;
+  display:grid;
+  justify-items:center;
+  gap:7px;
+  width:max-content;
+  max-width:calc(100vw - 30px);
+  color:#f5ead9;
+  opacity:0;
+  pointer-events:none;
+  transform:translate(-50%,10px);
+  transition:opacity .45s ease,transform .55s cubic-bezier(.22,.61,.36,1);
+}
+.page-load-cue.is-visible{opacity:1;pointer-events:auto;transform:translate(-50%,0)}
+.page-scroll-cue{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  min-height:34px;
+  padding:7px 13px;
+  border:1px solid rgba(225,190,126,.4);
+  border-radius:999px;
+  background:rgba(9,9,9,.72);
+  color:inherit;
+  box-shadow:0 9px 28px rgba(0,0,0,.26),inset 0 1px 0 rgba(255,255,255,.08);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  font:600 12px/1 Inter,sans-serif;
+  letter-spacing:.02em;
+  cursor:pointer;
+}
+.page-scroll-cue svg{
+  width:15px;
+  height:15px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.7;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  animation:page-cue-arrow 1.7s ease-in-out infinite;
+}
+body[data-gender="damen"] .page-scroll-cue{
+  background:rgba(250,246,239,.82);
+  color:#392f24;
+  border-color:rgba(139,97,43,.28);
+  box-shadow:0 9px 28px rgba(59,42,23,.16),inset 0 1px 0 rgba(255,255,255,.75);
+}
+@keyframes page-cue-arrow{0%,100%{transform:translateY(-1px)}50%{transform:translateY(3px)}}
+@media(max-width:780px){
+  .page-load-cue{bottom:74px;gap:6px}
+  .page-scroll-cue{min-height:32px;padding:6px 12px}
+}
+@media(prefers-reduced-motion:reduce){
+  .page-load-cue{transition:none}
+  .page-scroll-cue svg{animation:none}
+  .gender-dock::after{animation:none}
 }
 
 /* Final responsive refinements from the annotated visit section. */
@@ -791,4 +909,95 @@ body[data-gender="damen"] .info-strip .info-feature:not(.info-feature-dark){
   pointer-events:none;
   background:radial-gradient(ellipse at 38% 50%,rgba(0,0,0,.76) 0%,rgba(0,0,0,.52) 48%,rgba(0,0,0,.18) 72%,transparent 100%);
   filter:blur(7px);
+}
+
+/* Final visual alignment pass: adjacent section gutters use the exact same
+   surface color, so no thin seam appears at either transition. */
+body[data-gender="herren"] .stack-shell{
+  background-color:#0d0c0a;
+}
+.gender-dock-slot{background-color:var(--cream-2)}
+
+/* VIVO keeps the same glass language as the dark selector, inverted for its
+   light identity. The active metallic pill stays untouched. */
+body[data-gender="damen"] .gender-dock,
+body[data-gender="damen"] .gender-dock.is-docked{
+  background:linear-gradient(135deg,rgba(255,253,248,.78),rgba(236,225,209,.66));
+  border-color:rgba(255,255,255,.68);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.78),0 18px 48px rgba(61,44,27,.20);
+  backdrop-filter:blur(20px) saturate(1.16);
+  -webkit-backdrop-filter:blur(20px) saturate(1.16);
+}
+body[data-gender="damen"] .gender-dock.is-docked .gender-dock-button{
+  color:#5c5145;
+}
+body[data-gender="damen"] .gender-dock.is-docked .gender-dock-button.is-active{
+  color:#17110a;
+}
+
+/* Use the full desktop business-card height instead of leaving the details
+   grouped at the top. */
+@media(min-width:1101px){
+  #visit .brand-contact-panel{
+    display:grid;
+    grid-template-rows:auto auto minmax(92px,1fr) auto;
+  }
+  #visit .brand-contact-panel .brand-contact-details{
+    align-self:center;
+    margin-top:0;
+  }
+  #visit .brand-contact-panel .visit-actions{
+    margin-top:0;
+  }
+  #visit .brand-contact-panel[data-addon-gender-panel="damen"]::before{
+    background-position:17% 50%;
+  }
+
+  /* Give the salon carousel more of the panel, enlarge its cards, and softly
+     dissolve the moving rail at both horizontal edges. */
+  #salon .panel-grid{
+    grid-template-columns:minmax(300px,.68fr) minmax(0,1.32fr);
+  }
+  #salon .gallery-side{
+    padding:18px 10px;
+  }
+  #salon .gallery-viewport{
+    width:100%;
+    border-radius:26px;
+    -webkit-mask-image:linear-gradient(to right,transparent 0%,#000 7%,#000 93%,transparent 100%);
+    mask-image:linear-gradient(to right,transparent 0%,#000 7%,#000 93%,transparent 100%);
+  }
+  #salon .gallery-card{
+    flex-basis:min(82%,820px);
+  }
+  #salon .gallery-card img{
+    min-height:clamp(550px,62vh,680px);
+  }
+}
+
+@media(max-width:780px){
+  #services .price-category-head{
+    min-width:0;
+    padding-inline:2px;
+  }
+  #services .price-category-head h3{
+    flex:1 1 auto;
+    min-width:0;
+    max-width:none;
+    font-size:clamp(20px,5.6vw,28px)!important;
+    line-height:1;
+    white-space:nowrap;
+    overflow:visible;
+    overflow-wrap:normal;
+    word-break:normal;
+  }
+  #visit .brand-contact-panel[data-addon-gender-panel="damen"]::before{
+    background-position:20% 50%;
+  }
+}
+
+@media(max-width:340px){
+  #visit .brand-contact-panel[data-addon-gender-panel="damen"]::before{
+    background-position:24% 50%;
+  }
 }
