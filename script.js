@@ -143,8 +143,9 @@ const header = document.querySelector('.site-header');
         if (holdGoldPhase || root.classList.contains('gender-switching')) {
           lastGoldScrollY = window.scrollY;
         } else {
-          goldPhase = (goldPhase + (window.scrollY - lastGoldScrollY) * .18) % 560;
-          if (goldPhase < 0) goldPhase += 560;
+          // The gradient tiles forever, so keep an unbounded phase. Avoiding
+          // a numerical modulo also removes sub-pixel reset seams.
+          goldPhase += (window.scrollY - lastGoldScrollY) * .18;
           lastGoldScrollY = window.scrollY;
         }
       }

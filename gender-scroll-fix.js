@@ -171,12 +171,21 @@
   function syncDockVisibility() {
     const dock = document.querySelector('[data-gender-dock]');
     if (!dock) return;
-    const footer = document.querySelector('.footer');
-    const footerLift = footer
-      ? Math.max(0, window.innerHeight - footer.getBoundingClientRect().top + 14)
-      : 0;
-    dock.style.setProperty('--dock-footer-lift', `${footerLift}px`);
-    dock.classList.toggle('is-footer-lifted', footerLift > 1);
+    const slot = document.querySelector('[data-gender-dock-slot]');
+    if (slot) {
+      const dockHeight = dock.offsetHeight || 62;
+      const fixedBottom = window.innerWidth <= 780 ? 12 : 20;
+      const fixedTop = window.innerHeight - fixedBottom - dockHeight;
+      const slotRect = slot.getBoundingClientRect();
+      const shouldDock = slotRect.top <= fixedTop;
+
+      if (shouldDock) {
+        const slotTop = slotRect.top + window.scrollY;
+        const stopTop = slotTop + Math.max((slot.offsetHeight - dockHeight) / 2, 0);
+        dock.style.setProperty('--dock-stop-top', `${stopTop}px`);
+      }
+      dock.classList.toggle('is-docked', shouldDock);
+    }
     const visible = document.body.dataset.genderDockReady === 'true';
     if (dock.classList.contains('is-visible') !== visible) dock.classList.toggle('is-visible', visible);
     const hiddenValue = String(!visible);

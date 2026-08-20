@@ -1,6 +1,10 @@
 :root{
   --gold-shift:0px;
-  --metal-gold:repeating-linear-gradient(108deg,#9a672b 0px,#be8739 46px,#d9ad5d 82px,#edd095 96px,#c9913b 126px,#e3ba6e 164px,#aa702b 206px,#d4a657 246px,#efd59e 266px,#bd8133 318px,#ddb160 378px,#a56b29 430px,#d1a052 488px,#9a672b 560px);
+  /* One intrinsically repeating diagonal gradient. Its 560px color period
+     projects onto a 588.79px horizontal tile at 108deg, so every repeat joins
+     at the identical color and angle without a visible seam. */
+  --metal-gold:repeating-linear-gradient(108deg,#9a672b 0px,#be8739 45px,#d9ad5d 78px,#efd59e 95px,#c9913b 129px,#e3ba6e 168px,#aa702b 213px,#805023 280px,#aa702b 347px,#e3ba6e 392px,#c9913b 431px,#efd59e 465px,#d9ad5d 482px,#be8739 515px,#9a672b 560px);
+  --metal-gold-size:588.79px 100%;
 }
 
 #services .price-category-head > span svg {
@@ -35,7 +39,7 @@
 .ornament-divider>span{
   color:#ddb66a;
   background-image:var(--metal-gold);
-  background-size:560px 100%;
+  background-size:var(--metal-gold-size);
   background-position:var(--gold-shift) 50%;
   background-repeat:repeat-x;
   -webkit-background-clip:text;
@@ -74,9 +78,12 @@ html.gender-switching main{
 }
 .ornament-divider::before,
 .ornament-divider::after{
-  background-image:linear-gradient(90deg,transparent 0%,#9a6228 18%,#d8aa55 42%,#fff1bd 50%,#bd7b2d 62%,#e4bc70 80%,transparent 100%);
-  background-size:560px 100%;
+  background-image:var(--metal-gold);
+  background-size:var(--metal-gold-size);
   background-position:var(--gold-shift) 50%;
+  background-repeat:repeat-x;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 18%,#000 82%,transparent 100%);
+  mask-image:linear-gradient(90deg,transparent 0%,#000 18%,#000 82%,transparent 100%);
 }
 .ornament-divider>span{
   display:block;
@@ -86,7 +93,15 @@ html.gender-switching main{
   overflow:hidden;
   color:inherit;
   font-size:0;
-  background:currentColor;
+  background-color:currentColor;
+  background-image:var(--metal-gold);
+  background-size:var(--metal-gold-size);
+  background-position:var(--gold-shift) 50%;
+  background-repeat:repeat-x;
+  -webkit-background-clip:border-box;
+  background-clip:border-box;
+  -webkit-text-fill-color:initial;
+  filter:none;
   -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 20'%3E%3Cg fill='none' stroke='black' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 10h15c4 0 5-6 10-6 3 0 4 3 6 6 2-3 3-6 6-6 5 0 6 6 10 6h15'/%3E%3Cpath d='M22 10c4 0 5 5 10 8 5-3 6-8 10-8'/%3E%3Cpath d='m28 10 4-4 4 4-4 4-4-4Z'/%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat;
   mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 20'%3E%3Cg fill='none' stroke='black' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 10h15c4 0 5-6 10-6 3 0 4 3 6 6 2-3 3-6 6-6 5 0 6 6 10 6h15'/%3E%3Cpath d='M22 10c4 0 5 5 10 8 5-3 6-8 10-8'/%3E%3Cpath d='m28 10 4-4 4 4-4 4-4-4Z'/%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat;
 }
@@ -109,7 +124,7 @@ body[data-gender="herren"] .price-title-ornament{--ornament-color:rgba(224,192,1
   transition:background-position .6s cubic-bezier(.22,.61,.36,1);
 }
 .hero::after{
-  background:linear-gradient(180deg,rgba(0,0,0,.58) 0%,rgba(0,0,0,.16) 18%,rgba(0,0,0,.08) 25%,rgba(0,0,0,.50) 34%,rgba(0,0,0,.74) 50%,rgba(0,0,0,.96) 100%);
+  background:linear-gradient(180deg,rgba(0,0,0,.18) 0%,rgba(0,0,0,.05) 40%,rgba(0,0,0,.08) 52%,rgba(0,0,0,.42) 62%,rgba(0,0,0,.76) 76%,rgba(0,0,0,.96) 100%);
 }
 .site-header::before{
   content:"";
@@ -244,8 +259,9 @@ body[data-gender="damen"] .gender-dock-button.is-active{background:#9b6d34;color
   border-radius:999px;
   background-color:var(--gold);
   background-image:var(--metal-gold);
-  background-size:560px 100%;
+  background-size:var(--metal-gold-size);
   background-position:var(--gold-shift) 50%;
+  background-repeat:repeat-x;
   transform:translateX(0);
   transition:transform .3s cubic-bezier(.22,.61,.36,1),background-color .3s ease;
   pointer-events:none;
@@ -257,8 +273,9 @@ body[data-gender="damen"] .gender-dock::before{
 .brand-contact-panel .button-gold{
   background-color:var(--gold);
   background-image:var(--metal-gold);
-  background-size:560px 100%;
+  background-size:var(--metal-gold-size);
   background-position:var(--gold-shift) 50%;
+  background-repeat:repeat-x;
   border-color:rgba(255,235,184,.42);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.36),0 8px 24px rgba(105,63,18,.14);
   transition:transform .25s,box-shadow .25s,border-color .25s;
@@ -272,17 +289,17 @@ body[data-gender="damen"] .gender-dock::before{
 body[data-gender="herren"] .gender-dock-button.is-active{color:#17110a}
 body[data-gender="damen"] .gender-dock-button.is-active{color:#17110a}
 
-/* Once the switch clears the footer, keep one consistent contrast surface in
-   both themes so the identical metallic gradient also looks identical. */
-body[data-gender="damen"] .gender-dock.is-footer-lifted{
+/* Once the switch reaches its reserved slot, keep one consistent contrast
+   surface in both themes so the metallic gradient looks identical. */
+body[data-gender="damen"] .gender-dock.is-docked{
   background:rgba(12,11,10,.88);
   border-color:rgba(255,255,255,.14);
   box-shadow:0 18px 55px rgba(0,0,0,.34);
 }
-body[data-gender="damen"] .gender-dock.is-footer-lifted .gender-dock-button{
+body[data-gender="damen"] .gender-dock.is-docked .gender-dock-button{
   color:#e4d9c9;
 }
-body[data-gender="damen"] .gender-dock.is-footer-lifted .gender-dock-button.is-active{
+body[data-gender="damen"] .gender-dock.is-docked .gender-dock-button.is-active{
   color:#17110a;
 }
 .gender-dock.is-settled{
@@ -516,10 +533,6 @@ body[data-gender="herren"] #services [data-gender-panel="herren"] .free-extra-gr
     padding-top:6px!important;
     padding-bottom:18px!important;
   }
-  #services [data-gender-panel="damen"] .price-length-row>.price-cell:nth-of-type(2) small{
-    display:none!important;
-  }
-
   .brand-contact-panel::before{
     top:-5%;
     right:-6%;
@@ -564,6 +577,24 @@ body[data-gender="herren"] #services [data-gender-panel="herren"] .free-extra-gr
     min-height:100%;
     justify-content:flex-start;
   }
+
+  /* On widescreen desktops the contact side is deliberately narrower, while
+     its business card gains enough height to show the portrait and craft. */
+  #visit .visit-card{
+    grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);
+  }
+  #visit .brand-contact-panel{
+    min-height:440px;
+    display:flex;
+    flex-direction:column;
+  }
+  #visit .brand-contact-panel .visit-actions{
+    margin-top:auto;
+    padding-top:20px;
+  }
+  #visit .brand-contact-panel[data-addon-gender-panel="damen"]::before{
+    background-size:210% auto;
+  }
 }
 
 /* Keep the decorative trust word fully inside its panel. */
@@ -598,4 +629,146 @@ body[data-gender="herren"] #services [data-gender-panel="herren"] .free-extra-gr
   stroke-linecap:round;
   stroke-linejoin:round;
   display:block;
+}
+
+/* Final bottom layout: the floating selector settles into a real page slot
+   between the map and footer instead of covering either one. */
+.gender-dock-slot{
+  position:relative;
+  z-index:3;
+  height:92px;
+  background:#eee6da;
+  border-top:1px solid rgba(23,21,17,.08);
+  border-bottom:1px solid rgba(23,21,17,.08);
+}
+.gender-dock{
+  bottom:20px;
+}
+.gender-dock.is-docked{
+  position:absolute;
+  top:var(--dock-stop-top);
+  bottom:auto;
+}
+
+/* Give the light Damen feature tiles the inverse edge treatment used by the
+   two dark tiles. */
+body[data-gender="damen"] .info-strip .info-feature:not(.info-feature-dark){
+  border:1px solid rgba(23,21,17,.18);
+}
+
+/* Lift the VIVO portrait slightly while retaining the multi-directional fade. */
+.brand-contact-panel[data-addon-gender-panel="damen"]::before{
+  background-position:1% 19%;
+}
+
+/* A denser footer, with no small-type shadow doubling on the metallic logo. */
+.footer{
+  padding:17px var(--pad) 19px;
+  gap:18px;
+}
+.footer .brand-name{font-size:22px}
+.footer .brand-sub{font-size:9px}
+.footer .brand-dual .brand-name>span,
+.footer .brand-dual .brand-name>i{
+  filter:none!important;
+  text-shadow:none!important;
+}
+
+@media(max-width:780px){
+  .gender-dock-slot{height:84px}
+  .gender-dock{bottom:calc(12px + env(safe-area-inset-bottom))}
+  .brand-contact-panel[data-addon-gender-panel="damen"]::before{
+    background-position:1% 18%;
+  }
+  .footer{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    align-items:center;
+    padding:13px 16px 15px;
+    gap:9px 14px;
+  }
+  .footer .brand-name{font-size:18px}
+  .footer .brand-sub{font-size:8px;letter-spacing:.15em}
+  .footer nav{
+    grid-column:1/-1;
+    width:100%;
+    gap:8px 13px;
+  }
+  .footer nav a,
+  .footer>span{font-size:12px}
+  .footer>.footer-dual-note{
+    grid-column:2;
+    grid-row:1;
+    white-space:nowrap;
+    font-size:11px!important;
+  }
+}
+
+/* Final responsive refinements from the annotated visit section. */
+#visit .visit-card{
+  border-radius:var(--radius);
+}
+
+#visit .hours-grid,
+#visit .brand-contact-panel{
+  width:100%;
+  max-width:none;
+  box-sizing:border-box;
+}
+
+@media(min-width:781px){
+  #visit .hours-grid{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+  #visit .hour-box{
+    min-width:0;
+    padding-inline:clamp(10px,1.2vw,18px);
+  }
+  #visit .hour-box strong{
+    font-size:clamp(21px,1.9vw,30px);
+  }
+  #visit .hour-box span{
+    font-size:clamp(12px,1.15vw,18px);
+  }
+}
+
+@media(min-width:1101px){
+  #visit .brand-contact-details a{
+    font-size:26px;
+    line-height:1;
+  }
+  #visit .brand-contact-details small{
+    font-size:15px;
+  }
+}
+
+@media(max-width:780px){
+  #visit .visit-content h2{
+    font-size:clamp(40px,10.5vw,52px);
+    line-height:.92;
+  }
+  #visit .hours-grid{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:8px;
+    margin:20px 0;
+  }
+  #visit .hour-box{
+    min-width:0;
+    padding:12px 8px;
+    border-radius:16px;
+  }
+  #visit .hour-box strong{
+    font-size:clamp(17px,4.4vw,23px);
+    white-space:nowrap;
+  }
+  #visit .hour-box span{
+    font-size:clamp(10px,2.65vw,13px);
+    white-space:nowrap;
+  }
+  .info-strip{
+    width:auto;
+    margin:12px;
+    border-radius:22px;
+    overflow:hidden;
+  }
 }
