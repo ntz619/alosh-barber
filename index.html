@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css?v=20260819-icons6">
-  <link rel="stylesheet" href="price-icon-scale.css?v=1">
+  <link rel="stylesheet" href="price-icon-scale.css?v=35">
 </head>
 <body>
   <div class="grain"></div>
@@ -26,7 +26,7 @@
       <a href="#salon">Salon</a>
       <a href="#reviews">Bewertungen</a>
       <a href="#visit">Standort</a>
-      <a href="#booking" class="nav-book">Termin</a>
+      <a href="#booking" class="nav-book" data-gender-call aria-label="Zur ALOSH Visitenkarte scrollen"><svg class="nav-call-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.69 2.8a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.33 1.84.56 2.8.69A2 2 0 0 1 22 16.92Z"/></svg><span>Anrufen</span></a>
     </nav>
 
     <button class="menu-toggle" aria-label="Menü öffnen" aria-expanded="false">
@@ -41,7 +41,7 @@
       <a href="#salon">Salon</a>
       <a href="#reviews">Bewertungen</a>
       <a href="#visit">Standort</a>
-      <a href="#booking">Termin</a>
+      <a href="#booking" data-gender-call aria-label="Zur ALOSH Visitenkarte scrollen"><svg class="nav-call-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.69 2.8a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.33 1.84.56 2.8.69A2 2 0 0 1 22 16.92Z"/></svg><span>Anrufen</span></a>
     </nav>
   </div>
 
@@ -49,22 +49,25 @@
     <section class="hero">
       <div class="hero-inner">
         <div class="hero-copy reveal reveal-left">
-          <p class="hero-kicker">Friseur- und Barber-Erlebnis in Rostock.</p>
-          <h1>Schnitt.<br>Bart.<br>Stil.</h1>
-          <p>Elegante Atmosphäre, präzise Arbeit und ein hochwertiges Ergebnis – klar gestaltet für Desktop und Mobilgeräte.</p>
-          <div class="hero-actions">
-            <a class="button button-gold" href="#booking">Termin anfragen</a>
-            <a class="button button-outline" href="#visit">Standort ansehen</a>
-          </div>
+          <h1>Zwei Namen.<br>Ein Salon.</h1>
+          <div class="ornament-divider hero-title-ornament" aria-hidden="true"><span>❦</span></div>
+          <p>Zwei eigenständige Marken, eine gemeinsame Adresse und derselbe Anspruch an präzise, persönliche Haar- und Kosmetikleistungen.</p>
         </div>
 
-        <aside class="hero-card reveal reveal-pop" aria-label="Saloninformationen">
-          <div class="hero-card-top">
-            <div class="hero-card-line"><span data-shop-status>Öffnungszeiten</span><strong data-shop-detail>Mo–Fr 08:30–19:00</strong></div>
-            <div class="hero-card-line"><span>Anrufen</span><strong>0381 76016450</strong></div>
-            <div class="hero-card-line"><span>Adresse</span><strong>Doberaner Str. 48</strong></div>
+        <aside class="hero-card reveal reveal-pop" aria-label="ALOSH und VIVO Kontakt">
+          <div class="hero-card-line"><span data-shop-status>Öffnungszeiten</span><strong data-shop-detail>Mo–Fr 08:30–19:00</strong></div>
+          <div class="ornament-divider hero-card-ornament" aria-hidden="true"><span>❦</span></div>
+          <div class="hero-dual-contact">
+            <a class="hero-brand-contact alosh" href="tel:+491777289259" aria-label="ALOSH unter 0177 7289259 anrufen">
+              <span>ALOSH · Herren</span><strong>0177 7289259</strong><small>ALOSH anrufen</small>
+              <svg class="hero-call-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.69 2.8a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.33 1.84.56 2.8.69A2 2 0 0 1 22 16.92Z"/></svg>
+            </a>
+            <a class="hero-brand-contact vivo" href="tel:+491629105910" aria-label="VIVO unter 0162 9105910 anrufen">
+              <span>VIVO · Damen</span><strong>0162 9105910</strong><small>VIVO anrufen</small>
+              <svg class="hero-call-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.69 2.8a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.33 1.84.56 2.8.69A2 2 0 0 1 22 16.92Z"/></svg>
+            </a>
           </div>
-          <a class="button button-gold" href="tel:+4938176016450">Jetzt anrufen</a>
+          <div class="hero-card-line hero-address-line"><span>Adresse</span><a class="hero-address-link" href="#map" aria-label="Zur Karte für Doberaner Straße 48 scrollen"><svg class="hero-map-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg><span>Doberaner Str. 48</span></a></div>
         </aside>
       </div>
 
@@ -76,20 +79,20 @@
 
     <section class="info-strip">
       <div class="info-box reveal reveal-pop" style="--delay:.02s">
-        <strong data-shop-status>Öffnungszeiten</strong>
-        <span data-shop-detail>Mo–Fr 08:30 – 19:00</span>
+        <strong>Ohne Termin</strong>
+        <span>Spontan vorbeikommen</span>
       </div>
       <div class="info-box reveal reveal-pop" style="--delay:.08s">
-        <strong>Ohne Termin</strong>
-        <span>Willkommen, wenn etwas frei ist</span>
+        <strong>Haar &amp; Bart</strong>
+        <span>Schnitt, Kontur &amp; Rasur</span>
       </div>
       <div class="info-box reveal reveal-pop" style="--delay:.14s">
-        <strong>4.9 ★</strong>
-        <span>Google-Bewertungen</span>
+        <strong>Farbe &amp; Beauty</strong>
+        <span>Styling, Farbe &amp; Kosmetik</span>
       </div>
       <div class="info-box reveal reveal-pop" style="--delay:.2s">
-        <strong>Termin</strong>
-        <a href="#booking">Termin anfragen</a>
+        <strong>4,9 ★</strong>
+        <span>Google Bewertungen</span>
       </div>
     </section>
 
@@ -149,6 +152,7 @@
               <div class="scroll-decor parallax" data-speed="0.12">PREISE</div>
               <p class="price-kicker">Preisliste</p>
               <h2 data-gender-price-title>Herren</h2>
+              <div class="ornament-divider price-title-ornament" aria-hidden="true"><span>❦</span></div>
             </div>
 
             <div class="price-side gender-panel" data-gender-panel="herren">
@@ -418,19 +422,13 @@
             <div class="hour-box animate-on-scroll reveal-pop" style="--delay:.14s"><strong>Sonntag</strong><span>Geschlossen</span></div>
           </div>
 
-          <div class="address-box animate-on-scroll reveal-pop" style="--delay:.26s">
-            <strong>Kurdistan Barbershop</strong><br>
-            Doberaner Str. 48<br>
-            18057 Rostock
-          </div>
-
           <div class="visit-actions" id="booking">
             <a class="button button-gold" href="tel:+4938176016450">Anrufen: 0381 76016450</a>
             <a class="button button-outline" style="color:#201b14;border-color:rgba(17,15,11,.14)" href="https://www.google.com/maps/search/?api=1&query=Kurdistan+Barbershop+-+Friseur+Atelier+Justyna%2C+Rostock&query_place_id=ChIJq4bq9xNXrEcRFlgokdhbPqw" target="_blank" rel="noopener">In Maps öffnen</a>
           </div>
         </div>
 
-        <div class="visit-map reveal reveal-zoom">
+        <div class="visit-map reveal reveal-zoom" id="map">
           <iframe title="Standort in Google Maps" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2782.7605567998803!2d12.11145307220702!3d54.09123819497803!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47ac5713f7ea86ab%3A0xac3e5bd891285816!2sKurdistan%20Barbershop%20-%20Friseur%20Atelier%20Justyna%2C%20Rostock!5e0!3m2!1sde!2sde!4v1787150658706!5m2!1sde!2sde" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
       </div>
@@ -455,7 +453,7 @@
     <button type="button" class="gender-dock-button is-active" data-gender-toggle="herren" aria-pressed="true">Herren</button>
     <button type="button" class="gender-dock-button" data-gender-toggle="damen" aria-pressed="false">Damen</button>
   </nav>
-  <script src="script.js" defer></script>
-  <script src="gender-scroll-fix.js?v=20260819-de1" defer></script>
+  <script src="gender-scroll-fix.js?v=20260820-de27" defer></script>
+  <script src="script.js?v=20260820-genderfade7" defer></script>
 </body>
 </html>

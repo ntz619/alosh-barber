@@ -1,3 +1,8 @@
+:root{
+  --gold-shift:0px;
+  --metal-gold:repeating-linear-gradient(108deg,#9a672b 0px,#be8739 46px,#d9ad5d 82px,#edd095 96px,#c9913b 126px,#e3ba6e 164px,#aa702b 206px,#d4a657 246px,#efd59e 266px,#bd8133 318px,#ddb160 378px,#a56b29 430px,#d1a052 488px,#9a672b 560px);
+}
+
 #services .price-category-head > span svg {
   transform: scale(2.5);
   transform-origin: center;
@@ -20,37 +25,182 @@
   transform:translateY(-.18em);
 }
 
+/* Scroll-linked metallic gold: the highlight moves only with the page. */
+.brand-dual .brand-name>span,
+.brand-dual .brand-name>i,
+.shared-salon-mark strong,
+.rating-big,
+.info-strip .info-feature:last-child strong,
+.price-category-head h3,
+.ornament-divider>span{
+  color:#ddb66a;
+  background-image:var(--metal-gold);
+  background-size:560px 100%;
+  background-position:var(--gold-shift) 50%;
+  background-repeat:repeat-x;
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 1px 0 rgba(61,35,10,.25));
+}
+
+html.gender-switching,
+html.gender-switching body,
+html.gender-switching main{
+  overflow-anchor:none;
+}
+
+/* Keep the metallic rating's ascenders clear of its own tight line box. */
+#reviews .rating-big{
+  line-height:1;
+  padding-top:.08em;
+  overflow:visible;
+}
+
+/* Business-card inspired ornamental rules. */
+.ornament-divider{
+  --ornament-color:#c99b5b;
+  width:100%;
+  display:grid;
+  grid-template-columns:minmax(18px,1fr) auto minmax(18px,1fr);
+  align-items:center;
+  gap:9px;
+  color:var(--ornament-color);
+}
+.ornament-divider::before,
+.ornament-divider::after{
+  content:"";
+  height:1px;
+}
+.ornament-divider::before,
+.ornament-divider::after{
+  background-image:linear-gradient(90deg,transparent 0%,#9a6228 18%,#d8aa55 42%,#fff1bd 50%,#bd7b2d 62%,#e4bc70 80%,transparent 100%);
+  background-size:560px 100%;
+  background-position:var(--gold-shift) 50%;
+}
+.ornament-divider>span{
+  display:block;
+  width:50px;
+  min-width:50px;
+  height:20px;
+  overflow:hidden;
+  color:inherit;
+  font-size:0;
+  background:currentColor;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 20'%3E%3Cg fill='none' stroke='black' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 10h15c4 0 5-6 10-6 3 0 4 3 6 6 2-3 3-6 6-6 5 0 6 6 10 6h15'/%3E%3Cpath d='M22 10c4 0 5 5 10 8 5-3 6-8 10-8'/%3E%3Cpath d='m28 10 4-4 4 4-4 4-4-4Z'/%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 20'%3E%3Cg fill='none' stroke='black' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 10h15c4 0 5-6 10-6 3 0 4 3 6 6 2-3 3-6 6-6 5 0 6 6 10 6h15'/%3E%3Cpath d='M22 10c4 0 5 5 10 8 5-3 6-8 10-8'/%3E%3Cpath d='m28 10 4-4 4 4-4 4-4-4Z'/%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat;
+}
+.hero-title-ornament{width:min(100%,620px);margin:22px 0 4px}
+.hero-title-ornament+p{margin-top:14px}
+.hero-card>.hero-card-line:first-child{border-bottom:0;padding-bottom:5px}
+.hero-card>.hero-card-line:first-child>span,
+.hero-card>.hero-card-line:first-child>strong{white-space:nowrap}
+.hero-card>.hero-card-line:first-child>strong{font-size:clamp(27px,2.35vw,31px)}
+.hero-card-ornament{margin:0 0 13px;--ornament-color:rgba(224,192,136,.66)}
+.brand-contact-panel .brand-contact-head{border-bottom:0;padding-bottom:4px}
+.contact-card-ornament{width:min(190px,100%);margin:7px 0 1px;--ornament-color:rgba(167,120,62,.72)}
+.brand-contact-panel[data-addon-gender-panel="herren"] .contact-card-ornament{--ornament-color:rgba(224,192,136,.62)}
+.price-title-ornament{width:min(220px,100%);margin:17px 0 0;--ornament-color:rgba(143,103,50,.68)}
+body[data-gender="herren"] .price-title-ornament{--ornament-color:rgba(224,192,136,.66)}
+
 .hero .hero-kicker{letter-spacing:.04em}
+.hero::before{
+  background:url("assets/hero-alosh-vivo-custom.png") 50% 48%/cover no-repeat;
+  transition:background-position .6s cubic-bezier(.22,.61,.36,1);
+}
+.hero::after{
+  background:linear-gradient(180deg,rgba(0,0,0,.58) 0%,rgba(0,0,0,.16) 18%,rgba(0,0,0,.08) 25%,rgba(0,0,0,.50) 34%,rgba(0,0,0,.74) 50%,rgba(0,0,0,.96) 100%);
+}
+.site-header::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  background:linear-gradient(180deg,rgba(0,0,0,.68) 0%,rgba(0,0,0,.38) 66%,rgba(0,0,0,0) 100%);
+  transition:opacity .3s ease;
+}
+.site-header.scrolled::before{opacity:0}
+.site-header>*{position:relative;z-index:1}
 .hero-dual-contact{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:4px 0 16px}
 .hero-brand-contact{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  grid-template-rows:auto auto auto;
+  column-gap:14px;
+  align-items:center;
   min-width:0;
   padding:16px;
   border:1px solid rgba(255,255,255,.12);
   border-radius:18px;
+  cursor:pointer;
+  transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease;
 }
 .hero-brand-contact.alosh{background:#090909;color:#f4eadc}
 .hero-brand-contact.vivo{background:#f4eee5;color:#1c1813;border-color:rgba(201,155,91,.28)}
-.hero-brand-contact span{display:block;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-2)}
+.hero-brand-contact:hover{transform:translateY(-2px);border-color:rgba(224,192,136,.58);box-shadow:0 10px 28px rgba(0,0,0,.18)}
+.hero-brand-contact:focus-visible{outline:2px solid var(--gold-2);outline-offset:3px}
+.hero-brand-contact span{display:block;grid-column:1;font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--gold-2);white-space:nowrap}
 .hero-brand-contact.vivo span{color:#8a6030}
-.hero-brand-contact strong{display:block;margin-top:8px;font:500 27px/1.05 "Cormorant Garamond",serif;white-space:nowrap}
-.hero-brand-contact a{display:inline-block;margin-top:7px;font-size:14px;color:inherit;opacity:.78}
+.hero-brand-contact strong{display:block;grid-column:1;margin-top:8px;font:500 22px/1.05 "Cormorant Garamond",serif;white-space:nowrap}
+.hero-brand-contact small{display:block;grid-column:1;margin-top:7px;font-size:14px;color:inherit;opacity:.78}
+.hero-call-icon{
+  grid-column:2;
+  grid-row:1/-1;
+  width:36px;
+  height:36px;
+  padding:9px;
+  border:1px solid currentColor;
+  border-radius:50%;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.7;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  opacity:.82;
+}
+.hero-address-line>span{font-size:20px;font-weight:600;color:#e5d7c4}
+.hero-address-link{
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  padding:8px 11px;
+  border:1px solid rgba(224,192,136,.28);
+  border-radius:999px;
+  font:500 30px/1 "Cormorant Garamond",serif;
+  color:var(--text);
+  text-align:right;
+  transition:color .2s ease,border-color .2s ease,background .2s ease;
+}
+.hero-address-link>span{font:inherit;color:inherit}
+.hero-map-icon{width:20px;height:20px;flex:0 0 20px;fill:none;stroke:var(--gold-2);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.hero-address-link:hover{color:var(--gold-2);border-color:rgba(224,192,136,.68);background:rgba(224,192,136,.08)}
+.hero-address-link:focus-visible{outline:2px solid var(--gold-2);outline-offset:4px;border-radius:4px}
 .hero-shared-note{font-size:14px;color:#cbbfab;margin-top:2px}
 
 .info-brand strong{letter-spacing:.08em}
-.info-brand.alosh-info{background:#11100e;color:#f4eadc}
-.info-brand.alosh-info span{color:#b9aa96}
+.info-brand.alosh-info{background:#f7f2ea;color:#171511}
+.info-brand.alosh-info span{color:#6f655a}
 .info-brand.vivo-info{background:#f7f2ea;color:#171511}
 .info-brand.vivo-info span{color:#6f655a}
+.info-feature-dark{background:#11100e;color:#f4eadc}
+.info-feature-dark span{color:#b9aa96}
 
 .gender-dock-button small{display:block;margin-top:2px;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;opacity:.72}
 
 /* Herren / ALOSH = dark identity, Damen / VIVO = light identity. */
 .cuts-showcase,.stack-shell,.stack-panel .panel-inner,.footer{
-  transition:background-color .42s ease,color .42s ease,border-color .42s ease;
+  transition:background-color .3s ease,color .3s ease,border-color .3s ease;
+}
+.cuts-showcase{
+  background-image:none!important;
+  background-color:#0d0c0a!important;
 }
 body[data-gender="damen"] .cuts-showcase{
-  background:linear-gradient(180deg,#f5efe6 0%,#ebe2d5 100%);
+  background-color:#eee6da!important;
 }
+main#top{transition:background-color .3s ease}
+body[data-gender="damen"] main#top{background-color:#eee6da}
 body[data-gender="damen"] .cuts-word{color:rgba(143,103,50,.10)}
 body[data-gender="damen"] .cut-card{border-color:rgba(87,61,29,.16);box-shadow:0 18px 55px rgba(63,48,31,.14)}
 body[data-gender="damen"] .stack-shell{background:#eee6da}
@@ -82,9 +232,67 @@ body[data-gender="damen"] .gender-dock-button{color:#5c5145}
 body[data-gender="damen"] .gender-dock-button:hover{color:#171511}
 body[data-gender="damen"] .gender-dock-button.is-active{background:#9b6d34;color:#fffaf2}
 
+/* A stable sliding selector replaces button fades during gender changes. */
+.gender-dock::before{
+  content:"";
+  position:absolute;
+  top:6px;
+  left:6px;
+  z-index:0;
+  width:calc((100% - 18px)/2);
+  height:calc(100% - 12px);
+  border-radius:999px;
+  background-color:var(--gold);
+  background-image:var(--metal-gold);
+  background-size:560px 100%;
+  background-position:var(--gold-shift) 50%;
+  transform:translateX(0);
+  transition:transform .3s cubic-bezier(.22,.61,.36,1),background-color .3s ease;
+  pointer-events:none;
+}
+body[data-gender="damen"] .gender-dock::before{
+  background-color:var(--gold);
+  transform:translateX(calc(100% + 6px));
+}
+.brand-contact-panel .button-gold{
+  background-color:var(--gold);
+  background-image:var(--metal-gold);
+  background-size:560px 100%;
+  background-position:var(--gold-shift) 50%;
+  border-color:rgba(255,235,184,.42);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.36),0 8px 24px rgba(105,63,18,.14);
+  transition:transform .25s,box-shadow .25s,border-color .25s;
+}
+.gender-dock-button{
+  position:relative;
+  z-index:1;
+  background:transparent!important;
+}
+.gender-dock-button.is-active{background:transparent!important}
+body[data-gender="herren"] .gender-dock-button.is-active{color:#17110a}
+body[data-gender="damen"] .gender-dock-button.is-active{color:#17110a}
+
+/* Once the switch clears the footer, keep one consistent contrast surface in
+   both themes so the identical metallic gradient also looks identical. */
+body[data-gender="damen"] .gender-dock.is-footer-lifted{
+  background:rgba(12,11,10,.88);
+  border-color:rgba(255,255,255,.14);
+  box-shadow:0 18px 55px rgba(0,0,0,.34);
+}
+body[data-gender="damen"] .gender-dock.is-footer-lifted .gender-dock-button{
+  color:#e4d9c9;
+}
+body[data-gender="damen"] .gender-dock.is-footer-lifted .gender-dock-button.is-active{
+  color:#17110a;
+}
+.gender-dock.is-settled{
+  transition:bottom .18s ease,background-color .3s ease,border-color .3s ease,box-shadow .3s ease;
+}
+
 .shared-salon-mark{margin-bottom:20px}
 .shared-salon-mark span{display:block;font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#8f6732}
 .shared-salon-mark strong{display:block;margin-top:6px;font:500 clamp(36px,5vw,54px)/.95 "Cormorant Garamond",serif;color:#171511}
+.shared-salon-mark strong:only-child{margin-top:0}
 .brand-contact-panel{
   margin-top:18px;
   padding:22px;
@@ -92,10 +300,22 @@ body[data-gender="damen"] .gender-dock-button.is-active{background:#9b6d34;color
   border:1px solid rgba(23,21,17,.09);
 }
 .brand-contact-panel[hidden]{display:none!important}
-.brand-contact-panel[data-addon-gender-panel="herren"]{background:#151310;color:#f5efe6}
+
+#visit{
+  position:relative;
+  z-index:2;
+  border-radius:var(--radius);
+  overflow:hidden;
+}
+
+#cuts{
+  border-radius:var(--radius);
+  overflow:hidden;
+}
+.brand-contact-panel[data-addon-gender-panel="herren"]{background-color:#151310;background-image:none;color:#f5efe6}
 .brand-contact-panel[data-addon-gender-panel="damen"]{background:#fff;color:#171511}
-.brand-contact-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;padding-bottom:16px;border-bottom:1px solid rgba(127,107,81,.18)}
-.brand-contact-head span{font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#a7783e}
+.brand-contact-head{display:block;padding-bottom:16px;border-bottom:1px solid rgba(127,107,81,.18)}
+.brand-contact-head span{display:block;margin-top:7px;font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#a7783e}
 .brand-contact-head h3{font-size:clamp(40px,5vw,58px);line-height:.85}
 .brand-contact-details{display:grid;gap:10px;margin-top:16px}
 .brand-contact-details a{font-size:21px;font-weight:600;overflow-wrap:anywhere}
@@ -103,14 +323,279 @@ body[data-gender="damen"] .gender-dock-button.is-active{background:#9b6d34;color
 .brand-contact-panel .visit-actions{margin-top:18px}
 .brand-contact-panel[data-addon-gender-panel="herren"] .button-outline{color:#f5efe6!important;border-color:rgba(255,255,255,.18)!important}
 .brand-contact-panel[data-addon-gender-panel="damen"] .button-outline{color:#201b14!important;border-color:rgba(17,15,11,.14)!important}
+.instagram-button{gap:9px}
+.button-with-icon{gap:9px}
+.action-icon{width:18px;height:18px;flex:0 0 18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.instagram-icon{width:18px;height:18px;flex:0 0 18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.instagram-icon-dot{fill:currentColor;stroke:none}
 .footer .brand-sub{white-space:nowrap}
 .footer-dual-note{font-size:14px!important;color:#a99a86!important}
 
+.hour-box{padding-inline:clamp(12px,1.4vw,20px)}
+.hour-box strong{font-size:clamp(23px,2.15vw,30px);white-space:nowrap}
+.hour-box span{font-size:clamp(14px,1.4vw,18px);white-space:nowrap}
+
 @media(max-width:780px){
-  .hero-dual-contact{grid-template-columns:1fr}
-  .hero-brand-contact strong{font-size:25px}
+  .hero{
+    min-height:0;
+    align-items:stretch;
+    padding:calc(var(--header) + 39svh - 28px) 16px 28px;
+    background:#080808;
+  }
+  .hero::before{
+    inset:0 0 auto;
+    height:calc(var(--header) + 39svh);
+    transform:none;
+    background-size:cover;
+  }
+  body[data-gender="herren"] .hero::before{background-position:76% 46%}
+  body[data-gender="damen"] .hero::before{background-position:24% 46%}
+  .hero::after{
+    inset:0 0 auto;
+    height:calc(var(--header) + 39svh);
+    background:linear-gradient(180deg,rgba(0,0,0,.30) 0%,rgba(0,0,0,.04) 42%,rgba(0,0,0,.20) 67%,#080808 100%);
+  }
+  .hero-inner{display:block}
+  .hero-copy{position:relative;z-index:2;padding-top:8px}
+  .hero-copy h1{font-size:clamp(50px,16vw,68px);line-height:.88}
+  .hero-title-ornament{width:100%;margin-top:17px}
+  .hero-copy p{font-size:clamp(18px,5vw,21px);margin-top:12px}
+  .hero-card{margin-top:22px;padding:16px;border-radius:22px}
+  .hero-dual-contact{grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+  .hero-brand-contact{padding:13px 11px;column-gap:8px;border-radius:16px}
+  .hero-brand-contact span{font-size:10px;letter-spacing:.09em;white-space:nowrap}
+  .hero-brand-contact strong{font-size:clamp(18px,4.6vw,23px);margin-top:6px}
+  .hero-brand-contact small{font-size:12px;margin-top:5px}
+  .hero-call-icon{width:32px;height:32px;padding:8px}
+  .hero-address-line{grid-template-columns:auto 1fr;align-items:center;gap:10px}
+  .hero-address-line>span{font-size:18px}
+  .hero-address-link{justify-self:end;font-size:clamp(21px,6vw,27px);padding:8px 10px}
+  .hero-map-icon{width:18px;height:18px;flex-basis:18px}
+  .info-strip{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .info-box{min-height:104px!important;padding:16px 14px!important}
+  .info-box strong{font-size:clamp(25px,7vw,31px);line-height:.96}
+  .info-box span{font-size:14px;line-height:1.25;margin-top:5px}
   .gender-dock-button{line-height:1.05}
   .gender-dock-button small{font-size:9px}
   .brand-contact-head{align-items:flex-start;flex-direction:column;gap:6px}
   .brand-contact-details a{font-size:20px}
+}
+
+/* Annotation refinements */
+.grain{display:none}
+
+#services .price-intro{
+  padding-inline:clamp(18px,2vw,28px);
+}
+#services .price-intro h2{
+  font-size:clamp(42px,4vw,60px)!important;
+  white-space:nowrap;
+}
+
+/* ALOSH / Herren keeps the complete price list in its dark identity. */
+body[data-gender="herren"] #services .price-panel-inner,
+body[data-gender="herren"] #services .price-side[data-gender-panel="herren"]{
+  background:#0c0b0a!important;
+  color:#f5efe6!important;
+  border-color:rgba(224,192,136,.18)!important;
+}
+body[data-gender="herren"] #services .price-intro{
+  background:#151310!important;
+  color:#f5efe6!important;
+  border-color:rgba(224,192,136,.16)!important;
+}
+body[data-gender="herren"] #services .price-intro h2{color:#f5efe6!important}
+body[data-gender="herren"] #services .price-kicker{color:var(--gold-2)!important}
+body[data-gender="herren"] #services .price-intro .scroll-decor{color:rgba(224,192,136,.08)!important}
+body[data-gender="herren"] #services [data-gender-panel="herren"] .price-category h3{color:#e3c89e!important}
+body[data-gender="herren"] #services [data-gender-panel="herren"] .price-category-note,
+body[data-gender="herren"] #services [data-gender-panel="herren"] .price-service,
+body[data-gender="herren"] #services [data-gender-panel="herren"] .price-simple-row,
+body[data-gender="herren"] #services [data-gender-panel="herren"] .price-simple-row>span{color:#e4d9cc!important}
+body[data-gender="herren"] #services [data-gender-panel="herren"] .price-simple-row>strong,
+body[data-gender="herren"] #services [data-gender-panel="herren"] .price-cell strong,
+body[data-gender="herren"] #services [data-gender-panel="herren"] .price-length-head strong{color:var(--gold-2)!important}
+body[data-gender="herren"] #services [data-gender-panel="herren"] .price-category,
+body[data-gender="herren"] #services [data-gender-panel="herren"] .price-length-head,
+body[data-gender="herren"] #services [data-gender-panel="herren"] .price-length-row,
+body[data-gender="herren"] #services [data-gender-panel="herren"] .price-simple-row{border-color:rgba(224,192,136,.18)!important}
+body[data-gender="herren"] #services [data-gender-panel="herren"] .free-extra-grid span{
+  background:rgba(224,192,136,.045)!important;
+  color:#eee1cf!important;
+  border-color:rgba(224,192,136,.20)!important;
+}
+
+@media(max-width:1100px){
+  #services .price-intro{padding-inline:28px}
+  #services .price-intro h2{font-size:clamp(52px,9vw,72px)!important}
+}
+
+@media(max-width:780px){
+  #services .price-intro{padding-inline:20px}
+  #services .price-intro h2{font-size:clamp(50px,14vw,68px)!important}
+}
+
+/* Latest mobile annotation refinements. */
+.brand-contact-panel{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+}
+.brand-contact-panel::before{
+  content:"";
+  position:absolute;
+  z-index:0;
+  top:-8%;
+  right:-4%;
+  width:68%;
+  height:96%;
+  pointer-events:none;
+  background-image:url("assets/hero-alosh-vivo-custom.png");
+  background-repeat:no-repeat;
+  background-size:200% auto;
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0%,rgba(0,0,0,.45) 10%,#000 22%,#000 100%),radial-gradient(ellipse 78% 82% at 70% 24%,#000 0%,rgba(0,0,0,.92) 34%,rgba(0,0,0,.48) 54%,transparent 80%);
+  mask-image:linear-gradient(to bottom,transparent 0%,rgba(0,0,0,.45) 10%,#000 22%,#000 100%),radial-gradient(ellipse 78% 82% at 70% 24%,#000 0%,rgba(0,0,0,.92) 34%,rgba(0,0,0,.48) 54%,transparent 80%);
+  -webkit-mask-composite:source-in;
+  mask-composite:intersect;
+  -webkit-mask-repeat:no-repeat;
+  mask-repeat:no-repeat;
+}
+.brand-contact-panel>*{position:relative;z-index:1}
+.brand-contact-panel[data-addon-gender-panel="herren"]::before{
+  top:6%;
+  background-position:78% 0%;
+  opacity:.38;
+  filter:saturate(.72) contrast(1.08) brightness(.72);
+}
+.brand-contact-panel[data-addon-gender-panel="damen"]::before{
+  top:1%;
+  right:-7%;
+  width:78%;
+  height:100%;
+  background-size:225% auto;
+  background-position:1% 14%;
+  opacity:.34;
+  filter:saturate(.72) contrast(.96) brightness(1.04);
+}
+
+@media(max-width:780px){
+  .hero-address-link{
+    width:min(270px,100%);
+    min-height:46px;
+    justify-content:center;
+    padding:9px 15px;
+  }
+
+  .cuts-showcase{
+    padding:28px 0!important;
+  }
+  .cuts-track{
+    padding-block:0!important;
+  }
+  .cut-card,
+  .cut-card:nth-child(n){
+    height:min(49svh,390px)!important;
+    min-height:300px!important;
+  }
+
+  #services .price-intro{
+    padding:18px 16px 13px!important;
+  }
+  #services .price-kicker{
+    margin-bottom:5px!important;
+  }
+  #services .price-intro h2{
+    font-size:clamp(48px,13vw,62px)!important;
+    line-height:.88!important;
+  }
+  .price-title-ornament{
+    width:100%;
+    margin-top:9px;
+  }
+  #services .price-side{
+    padding-top:6px!important;
+    padding-bottom:18px!important;
+  }
+  #services [data-gender-panel="damen"] .price-length-row>.price-cell:nth-of-type(2) small{
+    display:none!important;
+  }
+
+  .brand-contact-panel::before{
+    top:-5%;
+    right:-6%;
+    width:76%;
+    height:90%;
+    background-size:210% auto;
+  }
+  .brand-contact-panel[data-addon-gender-panel="herren"]::before{background-position:78% 7%}
+  .brand-contact-panel[data-addon-gender-panel="damen"]::before{
+    top:0;
+    right:-10%;
+    width:86%;
+    height:96%;
+    background-size:230% auto;
+    background-position:1% 13%;
+  }
+}
+
+.hero-address-line{align-items:center}
+.gender-dock{
+  bottom:calc(20px + var(--dock-footer-lift,0px));
+  transition:opacity .38s ease,transform .48s cubic-bezier(.22,.61,.36,1),bottom .18s ease;
+}
+@media(max-width:780px){
+  .gender-dock{bottom:calc(12px + env(safe-area-inset-bottom) + var(--dock-footer-lift,0px))}
+}
+@media(prefers-reduced-motion:reduce){
+  .gender-dock{transition:none}
+}
+
+/* Content swaps directly; only colors and the dock indicator animate. */
+.gender-panel:not([hidden]),
+.brand-contact-panel:not([hidden]){animation:none!important}
+
+/* Desktop price identity fills the complete list column. */
+@media(min-width:1101px){
+  #services .price-layout{align-items:stretch}
+  #services .price-intro{
+    position:relative;
+    top:auto;
+    align-self:stretch;
+    min-height:100%;
+    justify-content:flex-start;
+  }
+}
+
+/* Keep the decorative trust word fully inside its panel. */
+#reviews .panel-copy .scroll-decor{
+  left:7%;
+  bottom:9%;
+  font-size:clamp(58px,6.4vw,92px);
+}
+
+@media(max-width:780px){
+  .brand-contact-panel[data-addon-gender-panel="herren"]::before{
+    top:6%;
+    background-position:78% 0%;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .gender-dock::before{transition:none}
+}
+
+.nav-book,
+.mobile-menu [data-gender-call]{gap:8px}
+.nav-book{display:inline-flex;align-items:center;justify-content:center;line-height:1}
+.mobile-menu [data-gender-call]{display:flex;align-items:center}
+.nav-call-icon{
+  width:16px;
+  height:16px;
+  flex:0 0 auto;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.8;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  display:block;
 }

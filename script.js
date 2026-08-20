@@ -120,8 +120,36 @@ const header = document.querySelector('.site-header');
     updateShopStatus();
     setInterval(updateShopStatus, 60000);
 
+    // Keep the metallic phase continuous across gender swaps. The scroll
+    // correction can move the document by thousands of pixels because the two
+    // price lists have different heights; that internal jump must not change
+    // the appearance of the gold controls.
+    let goldPhase = reducedMotion ? 0 : (window.scrollY * .18) % 560;
+    let lastGoldScrollY = window.scrollY;
+    let holdGoldPhase = false;
+
+    document.addEventListener('gender-switch-start', () => {
+      holdGoldPhase = true;
+      lastGoldScrollY = window.scrollY;
+    });
+    document.addEventListener('gender-switch-end', () => {
+      lastGoldScrollY = window.scrollY;
+      holdGoldPhase = false;
+    });
+
     function handleScrollState(){
       header.classList.toggle('scrolled', window.scrollY > 18);
+      if (!reducedMotion) {
+        if (holdGoldPhase || root.classList.contains('gender-switching')) {
+          lastGoldScrollY = window.scrollY;
+        } else {
+          goldPhase = (goldPhase + (window.scrollY - lastGoldScrollY) * .18) % 560;
+          if (goldPhase < 0) goldPhase += 560;
+          lastGoldScrollY = window.scrollY;
+        }
+      }
+      const goldShift = reducedMotion ? 0 : -Math.round(goldPhase);
+      root.style.setProperty('--gold-shift', `${goldShift}px`);
 
       document.querySelectorAll('.parallax').forEach(el => {
         if (reducedMotion) return;
@@ -473,8 +501,21 @@ function initGenderExperience() {
       button.setAttribute('aria-pressed', String(activeButton));
     });
 
+    document.querySelectorAll('[data-gender-call]').forEach(link => {
+      const isDamen = gender === 'damen';
+      link.setAttribute('aria-label', isDamen
+        ? 'Zur VIVO Visitenkarte scrollen'
+        : 'Zur ALOSH Visitenkarte scrollen');
+    });
+
     panels.forEach(panel => {
       panel.hidden = panel.dataset.genderPanel !== gender;
+    });
+
+    // Contact cards participate in the same synchronous layout swap. Keeping
+    // this out of a later MutationObserver prevents an intermediate frame.
+    document.querySelectorAll('[data-addon-gender-panel]').forEach(panel => {
+      panel.hidden = panel.dataset.addonGenderPanel !== gender;
     });
 
     tracks.forEach(track => {
@@ -491,19 +532,30 @@ function initGenderExperience() {
     });
   };
 
+  let genderTransitionActive = false;
   buttons.forEach(button => {
-    button.addEventListener('click', () => applyGender(button.dataset.genderToggle));
+    button.addEventListener('click', () => {
+      const nextGender = button.dataset.genderToggle;
+      if (!nextGender || nextGender === selectedGender || genderTransitionActive) return;
+
+      const runSwitch = window.__runGenderSwitch;
+      if (typeof runSwitch !== 'function') {
+        applyGender(nextGender);
+        return;
+      }
+
+      genderTransitionActive = true;
+      Promise.resolve(runSwitch(nextGender, applyGender)).finally(() => {
+        genderTransitionActive = false;
+      });
+    });
+
   });
 
   let dockRaf = 0;
   const updateDockVisibility = () => {
     dockRaf = 0;
-    const vh = window.innerHeight;
-    const cutsRect = cuts.getBoundingClientRect();
-    const salonRect = salon.getBoundingClientRect();
-    const reachedExamples = cutsRect.top <= vh * .72;
-    const beforeSalonVisuals = salonRect.top > vh * .66;
-    const visible = reachedExamples && beforeSalonVisuals;
+    const visible = document.body.dataset.genderDockReady === 'true';
     dock.classList.toggle('is-visible', visible);
     dock.setAttribute('aria-hidden', String(!visible));
   };
@@ -553,6 +605,11 @@ initGenderExperience();
         if (!autoplay) return;
         clearInterval(timer);
         timer = setInterval(goNext, autoplay);
+      }
+
+      if (autoplay) {
+        document.addEventListener('gender-switch-start', () => clearInterval(timer));
+        document.addEventListener('gender-switch-end', restart);
       }
 
       function goNext() {
