@@ -1115,6 +1115,22 @@ body[data-gender="damen"] .map-consent{
 body[data-gender="damen"] .map-consent small{color:#5f574d}
 @media(max-width:1100px){#map.visit-map{--map-min-height:400px}}
 @media(max-width:780px){
+  .hero-card>.hero-card-line:first-child{
+    display:grid;
+    grid-template-columns:minmax(0,.78fr) minmax(0,1.22fr);
+    align-items:end;
+    gap:10px;
+  }
+  .hero-card>.hero-card-line:first-child>strong{
+    width:100%;
+    max-width:none;
+    font-size:clamp(25px,6.6vw,32px);
+    line-height:.95;
+    letter-spacing:-.025em;
+    text-align:right;
+    white-space:normal;
+    text-wrap:balance;
+  }
   #map.visit-map{--map-min-height:390px}
   .map-preview{
     inset:-14px;
